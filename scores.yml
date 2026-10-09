@@ -1,0 +1,122 @@
+name: Update scores
+on:
+  schedule:
+    - cron: "*/5 * * * *"   # every 5 minutes (GitHub may run it later than that when busy)
+  workflow_dispatch:         # lets you run it by hand from the Actions tab
+permissions:
+  contents: write
+concurrency:
+  group: scores
+  cancel-in-progress: false
+jobs:
+  scores:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Fetch scores
+        run: |
+          node --input-type=module <<'SCORES_SCRIPT'
+          // Fetches scores for fixtures listed in index.html and writes scores.json.
+          import { readFileSync, writeFileSync, existsSync } from "node:fs";
+
+          const HOUR = 36e5;
+          const html = readFileSync("index.html", "utf8");
+          const m = html.match(/window\.HER_WEEKEND = ([\s\S]*?);\n<\/script>/);
+          if (!m) { console.error("Could not find the fixture data in index.html"); process.exit(1); }
+          const data = JSON.parse(m[1].replace(/<\\\//g, "</"));
+          const key = (f) => (f.start || f.date) + "|" + f.title;
+
+          const prev = existsSync("scores.json") ? JSON.parse(readFileSync("scores.json", "utf8")) : { scores: {} };
+          const scores = { ...(prev.scores || {}) };
+          const now = Date.now();
+
+          // A fixture needs checking from 15 minutes before the start until it has a final score (give up after 3 days).
+          const due = (f) => f.start && !f.result && scores[key(f)]?.state !== "post" &&
+            now > Date.parse(f.start) - 0.25 * HOUR && now < Date.parse(f.start) + 72 * HOUR;
+
+          async function getJson(url, opts) {
+            const r = await fetch(url, opts);
+            if (!r.ok) throw new Error(url + " returned " + r.status);
+            return r.json();
+          }
+
+          // ---------- AFLW, from the AFL's match feed ----------
+          const strip = (s) => s.toLowerCase().replace(/\b(crows|cats|eagles|swans|lions|suns|giants|fc|football club)\b/g, "").replace(/\s+/g, " ").trim();
+          async function aflw(fixtures) {
+            const seasons = await getJson("https://aflapi.afl.com.au/afl/v2/competitions/3/compseasons?pageSize=50");
+            const list = seasons.compSeasons || [];
+            const year = String(new Date().getFullYear());
+            const season = list.find((s) => (s.name || "").includes(year)) || list[0];
+            if (!season) throw new Error("No AFLW season found");
+            const res = await getJson(`https://aflapi.afl.com.au/afl/v2/matches?competitionId=3&compSeasonId=${season.id}&pageSize=300`);
+            for (const f of fixtures) {
+              const [h, a] = f.title.split(" v ").map(strip);
+              const t = Date.parse(f.start);
+              const match = (res.matches || []).find((x) =>
+                Math.abs(Date.parse(x.utcStartTime) - t) < 3 * HOUR &&
+                strip(x.home?.team?.name || "") === h && strip(x.away?.team?.name || "") === a);
+              if (!match) { console.log("AFLW: no match found for", f.title); continue; }
+              const hs = match.home?.score, as = match.away?.score;
+              if (!hs || !as) continue; // not started
+              const line = (name, s) => `${name} ${s.goals}.${s.behinds} (${s.totalScore})`;
+              const names = f.title.split(" v ");
+              const status = String(match.status || "").toUpperCase();
+              const done = ["CONCLUDED", "POSTGAME", "COMPLETE", "COMPLETED"].includes(status);
+              const started = done || hs.totalScore + as.totalScore > 0 || status.includes("LIVE");
+              if (!started) continue;
+              scores[key(f)] = { state: done ? "post" : "in", text: `${line(names[0], hs)}, ${line(names[1], as)}` };
+            }
+          }
+
+          // ---------- ESPN scoreboards (WNBA, international football), for fixtures with a "feed" ----------
+          const usDate = (iso) => new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York" }).format(new Date(iso)).replace(/-/g, "");
+          async function espn(fixtures) {
+            const groups = {};
+            for (const f of fixtures) (groups[f.feed + "|" + usDate(f.start)] ||= []).push(f);
+            for (const [g, list] of Object.entries(groups)) {
+              const [feed, date] = g.split("|");
+              const j = await getJson(`https://site.api.espn.com/apis/site/v2/sports/${feed}/scoreboard?dates=${date}`);
+              for (const f of list) {
+                const title = f.title.toLowerCase(), extra = (f.feedTeams || []).map((x) => x.toLowerCase());
+                const ev = (j.events || []).find((e) => Math.abs(Date.parse(e.date) - Date.parse(f.start)) < 3 * HOUR &&
+                  (e.competitions?.[0]?.competitors || []).some((c) => [c.team?.displayName, c.team?.shortDisplayName, c.team?.name, c.team?.location]
+                    .filter(Boolean).some((n) => title.includes(n.toLowerCase()) || extra.includes(n.toLowerCase()))));
+                const st = ev?.status?.type;
+                if (!ev || !st || st.state === "pre") continue;
+                const c = ev.competitions[0].competitors;
+                const home = c.find((x) => x.homeAway === "home") || c[0], away = c.find((x) => x.homeAway === "away") || c[1];
+                const nm = (x) => x.team.shortDisplayName || x.team.displayName;
+                scores[key(f)] = { state: st.state === "post" ? "post" : "in",
+                  text: `${nm(home)} ${home.score}, ${nm(away)} ${away.score}` + (st.state === "in" && st.shortDetail ? " · " + st.shortDetail : "") };
+              }
+            }
+          }
+
+          const todo = (data.fixtures || []).filter(due);
+          const jobs = [
+            ["AFLW", aflw, todo.filter((f) => f.sport === "AFLW")],
+            ["ESPN", espn, todo.filter((f) => f.feed)],
+          ];
+          for (const [name, fn, list] of jobs) {
+            if (!list.length) continue;
+            try { await fn(list); console.log(name + ": checked " + list.length); }
+            catch (e) { console.error(name + " failed: " + e.message); } // one feed failing never blocks the others
+          }
+
+          if (JSON.stringify(scores) !== JSON.stringify(prev.scores || {})) {
+            writeFileSync("scores.json", JSON.stringify({ updated: new Date().toISOString(), scores }, null, 2) + "\n");
+            console.log("scores.json updated");
+          } else console.log("No score changes");
+          SCORES_SCRIPT
+      - name: Commit if scores changed
+        run: |
+          git add scores.json 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git config user.name "scores-bot"
+            git config user.email "scores-bot@users.noreply.github.com"
+            git commit -m "Update scores"
+            git push
+          fi
