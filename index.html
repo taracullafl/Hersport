@@ -77,6 +77,10 @@ h1{font-family:var(--display);font-weight:800;font-size:clamp(34px,8vw,56px);lin
 footer{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:16px}
 footer a{color:var(--accent)}
 @media (max-width:440px){.fx,.next li{grid-template-columns:68px minmax(0,1fr);gap:10px}.time{font-size:17px}}
+.day.today h2::after{content:"Today";font-family:var(--body);font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;background:var(--accent);color:var(--bg);border-radius:999px;padding:3px 9px}
+.result.live{background:var(--accent);color:var(--bg)}
+.result.live span{color:var(--bg)}
+#days{display:flex;flex-direction:column;gap:28px}
 </style>
 </head>
 <body>
@@ -84,7 +88,7 @@ footer a{color:var(--accent)}
   <header class="masthead">
     <div class="brand">Her Weekend</div>
     <div class="weekrow">
-      <h1 id="heading">This weekend</h1>
+      <h1 id="heading">This week</h1>
       <div class="nav">
         <button id="prev" type="button" aria-label="Earlier weekend" disabled>&#8592;</button>
         <button id="next" type="button" aria-label="Later weekend" disabled>&#8594;</button>
@@ -96,13 +100,8 @@ footer a{color:var(--accent)}
   <div class="filters" id="filters" hidden></div>
 
   <main id="days">
-    <div class="empty" id="empty"><strong>Loading the fixture list</strong>This page shows the weekend's women's sport: what's on, when it starts in Melbourne, where to watch and which games you can get to in person.</div>
+    <div class="empty" id="empty"><strong>Loading the fixture list</strong>This page shows the week's women's sport: what's on, when it starts in Melbourne, where to watch and which games you can get to in person.</div>
   </main>
-
-  <section class="next" id="comingWrap" hidden>
-    <h2>Coming up</h2>
-    <ul id="coming"></ul>
-  </section>
 
   <footer id="foot" hidden>
     <div id="updated"></div>
@@ -111,392 +110,718 @@ footer a{color:var(--accent)}
   </footer>
 </div>
 <script>
-/* WEEKLY UPDATE: add each new weekend here, keyed by the Saturday date (YYYY-MM-DD).
-   SCORES: once a game is finished, add "result": "Bulldogs 6.4 (40) def Essendon 4.5 (29)" to that fixture and it shows on the page. */
+/* DATA. "fixtures" is one flat list for every week; the page sorts it into Monday-to-Sunday weeks in Melbourne time.
+   Each fixture: "start" (ISO time with offset) or, if the time is unknown, "date" (YYYY-MM-DD) plus "timeText".
+   Optional: "result" (typed score, shown once added), "aussies" (list), "local" (true = attendable in Victoria), "note".
+   AFLW scores arrive through scores.json, written every few minutes by the GitHub Action in this repo.
+   "feed" turns on automatic live scores from ESPN for that game (WNBA: "basketball/wnba", internationals: "soccer/fifa.friendly.w").
+   "follow" lists sports that always get a tab; "next" is the note shown when that sport has nothing on. */
 window.HER_WEEKEND = {
-  "weekends": {
-    "2026-10-10": {
-      "updated": "Friday 9 October 2026",
-      "note": "",
-      "fixtures": [
-        {
-          "day": "fri",
-          "start": "2026-10-09T14:50:00+11:00",
-          "timeText": "approx, sources differ",
-          "sport": "Cricket",
-          "comp": "ODI series, game 1",
-          "title": "Australia v Bangladesh",
-          "venue": "Allan Border Field, Brisbane",
-          "watch": [
-            "Seven",
-            "7plus",
-            "Kayo"
-          ],
-          "local": false,
-          "note": "Published start times range from 2.50pm to 3.20pm Melbourne time."
-        },
-        {
-          "day": "fri",
-          "start": "2026-10-09T19:15:00+11:00",
-          "sport": "AFLW",
-          "comp": "Round 9",
-          "title": "Western Bulldogs v Essendon",
-          "venue": "Mission Whitten Oval, Footscray",
-          "watch": [
-            "7mate",
-            "7plus",
-            "Fox Footy",
-            "Kayo"
-          ],
-          "local": true,
-          "note": "Gates open 6pm."
-        },
-        {
-          "day": "sat",
-          "start": "2026-10-10T05:30:00+11:00",
-          "sport": "Football",
-          "comp": "International friendly",
-          "title": "Germany v Matildas",
-          "venue": "BBBank Wildpark, Karlsruhe",
-          "watch": [
-            "Paramount+"
-          ],
-          "local": false
-        },
-        {
-          "day": "sat",
-          "start": "2026-10-10T13:05:00+11:00",
-          "sport": "AFLW",
-          "comp": "Round 9",
-          "title": "St Kilda v Collingwood",
-          "venue": "RSEA Park, Moorabbin",
-          "watch": [
-            "Fox Footy",
-            "Kayo",
-            "7plus"
-          ],
-          "local": true
-        },
-        {
-          "day": "sat",
-          "start": "2026-10-10T15:05:00+11:00",
-          "sport": "AFLW",
-          "comp": "Round 9",
-          "title": "Port Adelaide v West Coast",
-          "venue": "Alberton Oval, Adelaide",
-          "watch": [
-            "Fox Footy",
-            "Kayo",
-            "7plus"
-          ],
-          "local": false
-        },
-        {
-          "day": "sat",
-          "start": "2026-10-10T17:05:00+11:00",
-          "sport": "AFLW",
-          "comp": "Round 9",
-          "title": "Geelong v GWS Giants",
-          "venue": "GMHBA Stadium, Geelong",
-          "watch": [
-            "Fox Footy",
-            "Kayo",
-            "7plus"
-          ],
-          "local": true
-        },
-        {
-          "day": "sat",
-          "start": "2026-10-10T19:15:00+11:00",
-          "sport": "AFLW",
-          "comp": "Round 9",
-          "title": "Richmond v Adelaide",
-          "venue": "Ikon Park, Carlton",
-          "watch": [
-            "Fox Footy",
-            "Kayo",
-            "7plus"
-          ],
-          "local": true
-        },
-        {
-          "day": "sat",
-          "start": "2026-10-10T20:15:00+11:00",
-          "sport": "AFLW",
-          "comp": "Round 9",
-          "title": "Gold Coast v Melbourne",
-          "venue": "Great Barrier Reef Arena, Mackay",
-          "watch": [
-            "Fox Footy",
-            "Kayo",
-            "7plus"
-          ],
-          "local": false
-        },
-        {
-          "day": "sun",
-          "start": "2026-10-11T12:35:00+11:00",
-          "sport": "AFLW",
-          "comp": "Round 9",
-          "title": "North Melbourne v Fremantle",
-          "venue": "Arden Street Oval, North Melbourne",
-          "watch": [
-            "Fox Footy",
-            "Kayo",
-            "7plus"
-          ],
-          "local": true
-        },
-        {
-          "day": "sun",
-          "start": "2026-10-11T13:05:00+11:00",
-          "sport": "AFLW",
-          "comp": "Round 9",
-          "title": "Hawthorn v Brisbane",
-          "venue": "Kennedy Community Centre, Dingley",
-          "watch": [
-            "Fox Footy",
-            "Kayo",
-            "7plus"
-          ],
-          "local": true
-        },
-        {
-          "day": "sun",
-          "start": "2026-10-11T14:50:00+11:00",
-          "timeText": "approx, sources differ",
-          "sport": "Cricket",
-          "comp": "ODI series, game 2",
-          "title": "Australia v Bangladesh",
-          "venue": "Allan Border Field, Brisbane",
-          "watch": [
-            "Seven",
-            "7plus",
-            "Kayo"
-          ],
-          "local": false
-        },
-        {
-          "day": "sun",
-          "start": "2026-10-11T15:05:00+11:00",
-          "sport": "AFLW",
-          "comp": "Round 9",
-          "title": "Sydney v Carlton",
-          "venue": "Henson Park, Sydney",
-          "watch": [
-            "Fox Footy",
-            "Kayo",
-            "7plus"
-          ],
-          "local": false
-        },
-        {
-          "day": "sun",
-          "timeText": "Time TBC",
-          "sport": "Hockey",
-          "comp": "Hockey One",
-          "title": "Melbourne Cobras v NSW Pride",
-          "venue": "Melbourne Sports Centre, Parkville",
-          "watch": [],
-          "local": true,
-          "note": "Start time and home side not confirmed in the sources checked. Look at hockeyone.com.au before heading out."
-        },
-        {
-          "day": "sat",
-          "start": "2026-10-10T10:30:00+11:00",
-          "sport": "WNBA",
-          "comp": "Semi-final, game 3",
-          "title": "New York Liberty v Atlanta Dream",
-          "venue": "Barclays Center, Brooklyn",
-          "watch": [
-            "ESPN",
-            "Kayo",
-            "Disney+"
-          ],
-          "local": false,
-          "note": "Dream lead 2-0 and go through with a win. Best-of-five series. Australian coverage is normally on ESPN; check the guide on the day.",
-          "aussies": [
-            "Rebecca Allen (Liberty)",
-            "Anneli Maley (Liberty)",
-            "Isobel Borlase (Dream)"
-          ]
-        },
-        {
-          "day": "sat",
-          "start": "2026-10-10T12:30:00+11:00",
-          "sport": "WNBA",
-          "comp": "Semi-final, game 3",
-          "title": "Las Vegas Aces v Golden State Valkyries",
-          "venue": "Michelob ULTRA Arena, Las Vegas",
-          "watch": [
-            "ESPN",
-            "Kayo",
-            "Disney+"
-          ],
-          "local": false,
-          "note": "Valkyries lead 2-0 and go through with a win. Best-of-five series. Australian coverage is normally on ESPN; check the guide on the day.",
-          "aussies": [
-            "Stephanie Talbot (Aces)",
-            "Miela Sowah (Valkyries)"
-          ]
-        }
-      ],
-      "comingUp": [
-        {
-          "when": "Mon 12 Oct",
-          "text": "WNBA semi-finals game 4, only if needed: Liberty v Dream 5.00am, Aces v Valkyries time not set"
-        },
-        {
-          "when": "Mon 12 Oct",
-          "text": "Wuhan Open main draw starts (WTA 1000), final Sunday 18 October"
-        },
-        {
-          "when": "Wed 14 Oct",
-          "text": "Australia v Bangladesh, third ODI, Brisbane"
-        },
-        {
-          "when": "Thu 15 Oct",
-          "text": "WNBL season tips off: Tasmania Jewels v Geelong Venom"
-        },
-        {
-          "when": "Fri 16 Oct",
-          "text": "A-League Women season starts"
-        },
-        {
-          "when": "Sun 18 Oct",
-          "text": "Constellation Cup game 1, Diamonds v Silver Ferns, Auckland"
-        },
-        {
-          "when": "Sun 18 Oct",
-          "text": "WNBA Finals game 1, 6.30am Melbourne time"
-        },
-        {
-          "when": "Wed 28 Oct",
-          "text": "Constellation Cup game 4 at John Cain Arena, Melbourne"
-        },
-        {
-          "when": "Thu 29 Oct",
-          "text": "WBBL season starts"
-        }
-      ],
-      "sources": [
-        {
-          "label": "Austadiums AFLW fixture",
-          "url": "https://www.austadiums.com/sport/comp/aflw/fixture"
-        },
-        {
-          "label": "Western Bulldogs game-day guide",
-          "url": "https://www.westernbulldogs.com.au/news/2147251/aflw-game-day-guide-round-9-v-essendon"
-        },
-        {
-          "label": "Football360 Matildas guide",
-          "url": "https://football360.com.au/how-to-watch-australia-germany-matildas-live-stream-kick-off-time-date/"
-        },
-        {
-          "label": "Wisden ODI series guide",
-          "url": "https://www.wisden.com/series/australia-vs-bangladesh-w-2026/cricket-news/aus-w-vs-ban-w-odis-all-you-need-to-know-full-schedule-squads-venues-and-live-streaming-details"
-        },
-        {
-          "label": "Hockey NSW",
-          "url": "https://www.hockeynsw.com.au/news/hockey-one-returns-home-to-olympic-park"
-        },
-        {
-          "label": "cricket.com.au domestic schedule",
-          "url": "https://www.cricket.com.au/news/4536027/womens-domestic-schedule-released-for-2026-27-summer-of-cricket"
-        },
-        {
-          "label": "NBC Sports WNBA playoff schedule",
-          "url": "https://www.nbcsports.com/wnba/news/2026-wnba-playoffs-full-schedule-bracket-matchups-dates-preview"
-        },
-        {
-          "label": "basketball.com.au Aussies in the WNBA semis",
-          "url": "https://www.basketball.com.au/news/wnba-semi-finals-2026-australians"
-        }
-      ]
+  "updated": "Friday 9 October 2026",
+  "follow": [
+    {
+      "sport": "WNBL",
+      "next": "Season starts Thursday 15 October, 7.00pm: Tasmania Jewels v Geelong Venom in Hobart."
+    },
+    {
+      "sport": "WBBL",
+      "next": "Season starts Thursday 29 October at Junction Oval, St Kilda: Renegades v Thunder at 3.40pm, then Stars v Hurricanes at 7.10pm."
+    },
+    {
+      "sport": "Opals",
+      "next": "No Opals games are scheduled. Their next announced event is the 2027 FIBA Women's Asia Cup, dates not yet set."
+    },
+    {
+      "sport": "Diamonds",
+      "next": "Constellation Cup v New Zealand starts Sunday 18 October in Auckland, 5.30pm Melbourne time."
     }
-  }
+  ],
+  "fixtures": [
+    {
+      "start": "2026-10-09T14:50:00+11:00",
+      "timeText": "approx, sources differ",
+      "sport": "Cricket",
+      "comp": "ODI series, game 1",
+      "title": "Australia v Bangladesh",
+      "venue": "Allan Border Field, Brisbane",
+      "watch": [
+        "Seven",
+        "7plus",
+        "Kayo"
+      ],
+      "local": false,
+      "note": "Published start times range from 2.50pm to 3.20pm Melbourne time."
+    },
+    {
+      "start": "2026-10-09T19:15:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 9",
+      "title": "Western Bulldogs v Essendon",
+      "venue": "Mission Whitten Oval, Footscray",
+      "watch": [
+        "7mate",
+        "7plus",
+        "Fox Footy",
+        "Kayo"
+      ],
+      "local": true,
+      "note": "Gates open 6pm."
+    },
+    {
+      "start": "2026-10-10T05:30:00+11:00",
+      "sport": "Football",
+      "comp": "International friendly",
+      "title": "Germany v Matildas",
+      "venue": "BBBank Wildpark, Karlsruhe",
+      "watch": [
+        "Paramount+"
+      ],
+      "local": false,
+      "feed": "soccer/fifa.friendly.w",
+      "feedTeams": [
+        "Australia",
+        "Germany"
+      ]
+    },
+    {
+      "start": "2026-10-10T13:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 9",
+      "title": "St Kilda v Collingwood",
+      "venue": "RSEA Park, Moorabbin",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true
+    },
+    {
+      "start": "2026-10-10T15:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 9",
+      "title": "Port Adelaide v West Coast",
+      "venue": "Alberton Oval, Adelaide",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": false
+    },
+    {
+      "start": "2026-10-10T17:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 9",
+      "title": "Geelong v GWS Giants",
+      "venue": "GMHBA Stadium, Geelong",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true
+    },
+    {
+      "start": "2026-10-10T19:15:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 9",
+      "title": "Richmond v Adelaide",
+      "venue": "Ikon Park, Carlton",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true
+    },
+    {
+      "start": "2026-10-10T20:15:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 9",
+      "title": "Gold Coast v Melbourne",
+      "venue": "Great Barrier Reef Arena, Mackay",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": false
+    },
+    {
+      "start": "2026-10-11T12:35:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 9",
+      "title": "North Melbourne v Fremantle",
+      "venue": "Arden Street Oval, North Melbourne",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true
+    },
+    {
+      "start": "2026-10-11T13:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 9",
+      "title": "Hawthorn v Brisbane",
+      "venue": "Kennedy Community Centre, Dingley",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true
+    },
+    {
+      "start": "2026-10-11T14:50:00+11:00",
+      "timeText": "approx, sources differ",
+      "sport": "Cricket",
+      "comp": "ODI series, game 2",
+      "title": "Australia v Bangladesh",
+      "venue": "Allan Border Field, Brisbane",
+      "watch": [
+        "Seven",
+        "7plus",
+        "Kayo"
+      ],
+      "local": false
+    },
+    {
+      "start": "2026-10-11T15:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 9",
+      "title": "Sydney v Carlton",
+      "venue": "Henson Park, Sydney",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": false
+    },
+    {
+      "timeText": "Time TBC",
+      "sport": "Hockey",
+      "comp": "Hockey One",
+      "title": "Melbourne Cobras v NSW Pride",
+      "venue": "Melbourne Sports Centre, Parkville",
+      "watch": [],
+      "local": true,
+      "note": "Start time and home side not confirmed in the sources checked. Look at hockeyone.com.au before heading out.",
+      "date": "2026-10-11"
+    },
+    {
+      "start": "2026-10-10T10:30:00+11:00",
+      "sport": "WNBA",
+      "comp": "Semi-final, game 3",
+      "title": "New York Liberty v Atlanta Dream",
+      "venue": "Barclays Center, Brooklyn",
+      "watch": [
+        "ESPN",
+        "Kayo",
+        "Disney+"
+      ],
+      "local": false,
+      "note": "Dream lead 2-0 and go through with a win. Best-of-five series. Australian coverage is normally on ESPN; check the guide on the day.",
+      "aussies": [
+        "Rebecca Allen (Liberty)",
+        "Anneli Maley (Liberty)",
+        "Isobel Borlase (Dream)"
+      ],
+      "feed": "basketball/wnba"
+    },
+    {
+      "start": "2026-10-10T12:30:00+11:00",
+      "sport": "WNBA",
+      "comp": "Semi-final, game 3",
+      "title": "Las Vegas Aces v Golden State Valkyries",
+      "venue": "Michelob ULTRA Arena, Las Vegas",
+      "watch": [
+        "ESPN",
+        "Kayo",
+        "Disney+"
+      ],
+      "local": false,
+      "note": "Valkyries lead 2-0 and go through with a win. Best-of-five series. Australian coverage is normally on ESPN; check the guide on the day.",
+      "aussies": [
+        "Stephanie Talbot (Aces)",
+        "Miela Sowah (Valkyries)"
+      ],
+      "feed": "basketball/wnba"
+    },
+    {
+      "start": "2026-10-12T05:00:00+11:00",
+      "sport": "WNBA",
+      "comp": "Semi-final, game 4 (if needed)",
+      "title": "New York Liberty v Atlanta Dream",
+      "venue": "Barclays Center, Brooklyn",
+      "watch": [
+        "ESPN",
+        "Kayo",
+        "Disney+"
+      ],
+      "local": false,
+      "feed": "basketball/wnba",
+      "aussies": [
+        "Rebecca Allen (Liberty)",
+        "Anneli Maley (Liberty)",
+        "Isobel Borlase (Dream)"
+      ],
+      "note": "Only played if the Liberty win game 3."
+    },
+    {
+      "sport": "WNBA",
+      "comp": "Semi-final, game 4 (if needed)",
+      "title": "Las Vegas Aces v Golden State Valkyries",
+      "venue": "Michelob ULTRA Arena, Las Vegas",
+      "watch": [
+        "ESPN",
+        "Kayo",
+        "Disney+"
+      ],
+      "local": false,
+      "date": "2026-10-12",
+      "feed": "basketball/wnba",
+      "aussies": [
+        "Stephanie Talbot (Aces)",
+        "Miela Sowah (Valkyries)"
+      ],
+      "timeText": "Time TBC",
+      "note": "Only played if the Aces win game 3."
+    },
+    {
+      "start": "2026-10-14T06:00:00+11:00",
+      "sport": "Football",
+      "comp": "International friendly",
+      "title": "Haiti v Matildas",
+      "venue": "Stade Walter-Luzi, Chambly, France",
+      "watch": [
+        "Paramount+"
+      ],
+      "local": false,
+      "feed": "soccer/fifa.friendly.w",
+      "feedTeams": [
+        "Australia",
+        "Haiti"
+      ]
+    },
+    {
+      "start": "2026-10-14T14:50:00+11:00",
+      "sport": "Cricket",
+      "comp": "ODI series, game 3",
+      "title": "Australia v Bangladesh",
+      "venue": "Allan Border Field, Brisbane",
+      "watch": [
+        "Seven",
+        "7plus",
+        "Kayo"
+      ],
+      "local": false,
+      "timeText": "approx, sources differ"
+    },
+    {
+      "start": "2026-10-15T19:00:00+11:00",
+      "sport": "WNBL",
+      "comp": "Round 1",
+      "title": "Tasmania Jewels v Geelong Venom",
+      "venue": "MyState Bank Arena, Hobart",
+      "watch": [
+        "9Now",
+        "ESPN on Disney+"
+      ],
+      "local": false,
+      "note": "Season opener."
+    },
+    {
+      "start": "2026-10-16T19:00:00+11:00",
+      "sport": "WNBL",
+      "comp": "Round 1",
+      "title": "Southside v Sydney",
+      "venue": "State Basketball Centre, Wantirna South",
+      "watch": [
+        "9Now",
+        "ESPN on Disney+"
+      ],
+      "local": true
+    },
+    {
+      "start": "2026-10-16T19:15:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 10",
+      "title": "Melbourne v Richmond",
+      "venue": "Venue to confirm",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true
+    },
+    {
+      "start": "2026-10-17T13:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 10",
+      "title": "Adelaide v Gold Coast",
+      "venue": "Venue to confirm",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": false
+    },
+    {
+      "start": "2026-10-17T15:00:00+11:00",
+      "sport": "WNBL",
+      "comp": "Round 1",
+      "title": "Canberra v Bendigo",
+      "venue": "AIS Arena, Canberra",
+      "watch": [
+        "9Now",
+        "ESPN on Disney+"
+      ],
+      "local": false
+    },
+    {
+      "start": "2026-10-17T15:00:00+11:00",
+      "sport": "Football",
+      "comp": "A-League Women, round 1",
+      "title": "Newcastle Jets v Perth Glory",
+      "venue": "Hunter City Motor Group Stadium, Weston",
+      "watch": [
+        "Paramount+"
+      ],
+      "local": false
+    },
+    {
+      "start": "2026-10-17T15:00:00+11:00",
+      "sport": "Football",
+      "comp": "A-League Women, round 1",
+      "title": "Western Sydney Wanderers v Melbourne Victory",
+      "venue": "Wanderers Football Park, Sydney",
+      "watch": [
+        "Paramount+"
+      ],
+      "local": false
+    },
+    {
+      "start": "2026-10-17T15:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 10",
+      "title": "Carlton v Western Bulldogs",
+      "venue": "Venue to confirm",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true
+    },
+    {
+      "start": "2026-10-17T17:00:00+11:00",
+      "sport": "Football",
+      "comp": "A-League Women, round 1",
+      "title": "Brisbane Roar v Central Coast Mariners",
+      "venue": "Gioca Stadium, Brisbane",
+      "watch": [
+        "Paramount+"
+      ],
+      "local": false
+    },
+    {
+      "start": "2026-10-17T17:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 10",
+      "title": "Brisbane v Port Adelaide",
+      "venue": "Venue to confirm",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": false
+    },
+    {
+      "start": "2026-10-17T19:00:00+11:00",
+      "sport": "WNBL",
+      "comp": "Round 1",
+      "title": "Perth v Townsville",
+      "venue": "Perth High Performance Centre",
+      "watch": [
+        "9Now",
+        "ESPN on Disney+"
+      ],
+      "local": false
+    },
+    {
+      "start": "2026-10-17T19:15:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 10",
+      "title": "West Coast v Geelong",
+      "venue": "Venue to confirm",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": false
+    },
+    {
+      "start": "2026-10-18T06:30:00+11:00",
+      "sport": "WNBA",
+      "comp": "Finals, game 1",
+      "title": "Teams to be decided",
+      "venue": "United States",
+      "watch": [
+        "ESPN",
+        "Kayo",
+        "Disney+"
+      ],
+      "local": false,
+      "feed": "basketball/wnba"
+    },
+    {
+      "start": "2026-10-18T10:15:00+11:00",
+      "sport": "Football",
+      "comp": "A-League Women, round 1",
+      "title": "Wellington Phoenix v Melbourne City",
+      "venue": "Hnry Stadium, Wellington",
+      "watch": [
+        "Paramount+"
+      ],
+      "local": false
+    },
+    {
+      "start": "2026-10-18T12:30:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 10",
+      "title": "Collingwood v Sydney",
+      "venue": "Venue to confirm",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true
+    },
+    {
+      "start": "2026-10-18T13:00:00+11:00",
+      "sport": "WNBL",
+      "comp": "Round 1",
+      "title": "Sydney v Adelaide",
+      "venue": "Quaycentre, Sydney",
+      "watch": [
+        "9Now",
+        "ESPN on Disney+",
+        "9GO!"
+      ],
+      "local": false
+    },
+    {
+      "start": "2026-10-18T14:35:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 10",
+      "title": "GWS Giants v Hawthorn",
+      "venue": "Venue to confirm",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": false
+    },
+    {
+      "start": "2026-10-18T15:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 10",
+      "title": "Essendon v North Melbourne",
+      "venue": "Venue to confirm",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true
+    },
+    {
+      "start": "2026-10-18T16:30:00+11:00",
+      "sport": "Football",
+      "comp": "A-League Women, round 1",
+      "title": "Sydney FC v Adelaide United",
+      "venue": "Sydney Olympic Park Athletic Centre",
+      "watch": [
+        "Paramount+"
+      ],
+      "local": false
+    },
+    {
+      "start": "2026-10-18T17:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 10",
+      "title": "Fremantle v St Kilda",
+      "venue": "Venue to confirm",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": false
+    },
+    {
+      "start": "2026-10-18T17:30:00+11:00",
+      "sport": "Diamonds",
+      "comp": "Constellation Cup, game 1",
+      "title": "New Zealand v Australia",
+      "venue": "Spark Arena, Auckland",
+      "watch": [],
+      "local": false,
+      "note": "Broadcaster not yet announced."
+    },
+    {
+      "sport": "Tennis",
+      "comp": "WTA 1000 Wuhan Open",
+      "title": "Singles final",
+      "venue": "Wuhan, China",
+      "watch": [
+        "beIN Sports"
+      ],
+      "local": false,
+      "date": "2026-10-18",
+      "timeText": "Evening, time TBC"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Austadiums AFLW fixture",
+      "url": "https://www.austadiums.com/sport/comp/aflw/fixture"
+    },
+    {
+      "label": "Western Bulldogs game-day guide",
+      "url": "https://www.westernbulldogs.com.au/news/2147251/aflw-game-day-guide-round-9-v-essendon"
+    },
+    {
+      "label": "Football360 Matildas guide",
+      "url": "https://football360.com.au/how-to-watch-australia-germany-matildas-live-stream-kick-off-time-date/"
+    },
+    {
+      "label": "Wisden ODI series guide",
+      "url": "https://www.wisden.com/series/australia-vs-bangladesh-w-2026/cricket-news/aus-w-vs-ban-w-odis-all-you-need-to-know-full-schedule-squads-venues-and-live-streaming-details"
+    },
+    {
+      "label": "Hockey NSW",
+      "url": "https://www.hockeynsw.com.au/news/hockey-one-returns-home-to-olympic-park"
+    },
+    {
+      "label": "cricket.com.au domestic schedule",
+      "url": "https://www.cricket.com.au/news/4536027/womens-domestic-schedule-released-for-2026-27-summer-of-cricket"
+    },
+    {
+      "label": "NBC Sports WNBA playoff schedule",
+      "url": "https://www.nbcsports.com/wnba/news/2026-wnba-playoffs-full-schedule-bracket-matchups-dates-preview"
+    },
+    {
+      "label": "basketball.com.au Aussies in the WNBA semis",
+      "url": "https://www.basketball.com.au/news/wnba-semi-finals-2026-australians"
+    },
+    {
+      "label": "Female Cricket WBBL|12 schedule",
+      "url": "https://femalecricket.com/women-cricket-news/93252-wbbl-12-schedule-announced-full-fixtures-dates-and-venues-for-womens-big-bash-league-2026.html"
+    },
+    {
+      "label": "OzFootball AFLW fixtures",
+      "url": "https://www.ozfootball.com/stats/aflw"
+    },
+    {
+      "label": "Austadiums A-League Women fixture",
+      "url": "https://www.austadiums.com/sport/comp/w-league/fixture"
+    },
+    {
+      "label": "WNBL27 full schedule",
+      "url": "https://www.basketball.com.au/news/wnbl27-fixture-full-schedule-every-game-every-club"
+    },
+    {
+      "label": "Matildas v Haiti match centre",
+      "url": "https://matildas.com.au/match/haiti-women-v-australia-women-friendlies-w-2026-13-10-2026/22278858"
+    }
+  ]
 };
 </script>
 <script>
 (function(){
-  var TZ="Australia/Melbourne";
-  var state={docs:[],idx:-1,sport:"all",goOnly:false,userNav:false};
+  var TZ="Australia/Melbourne", DATA=window.HER_WEEKEND||{}, DAY=864e5;
+  var state={week:null,sport:"all",goOnly:false,live:{}};
   try{var s=JSON.parse(localStorage.getItem("hw-filters")||"{}");if(s.sport)state.sport=s.sport;state.goOnly=!!s.goOnly;}catch(e){}
   function save(){try{localStorage.setItem("hw-filters",JSON.stringify({sport:state.sport,goOnly:state.goOnly}));}catch(e){}}
   function $(id){return document.getElementById(id)}
   function el(tag,cls,text){var n=document.createElement(tag);if(cls)n.className=cls;if(text!=null)n.textContent=text;return n}
 
-  function melbParts(d){
-    var p={};new Intl.DateTimeFormat("en-AU",{timeZone:TZ,year:"numeric",month:"2-digit",day:"2-digit",weekday:"short"}).formatToParts(d).forEach(function(x){p[x.type]=x.value});
-    return p;
+  // Melbourne calendar date (YYYY-MM-DD) of an instant
+  function melbDate(d){
+    var p={};new Intl.DateTimeFormat("en-AU",{timeZone:TZ,year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(d).forEach(function(x){p[x.type]=x.value});
+    return p.year+"-"+p.month+"-"+p.day;
   }
-  // Saturday (YYYY-MM-DD) of the weekend that matters now: Mon-Sun all point at that week's Saturday.
-  function targetSaturday(now){
-    var p=melbParts(now);
-    var dow={Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6,Sun:7}[p.weekday.slice(0,3)]||6;
-    var base=Date.UTC(+p.year,+p.month-1,+p.day);
-    return new Date(base+(6-dow)*864e5).toISOString().slice(0,10);
+  function fxDate(f){return f.start?melbDate(new Date(f.start)):f.date}
+  function utc(id){return new Date(id+"T00:00:00Z")}
+  function iso(d){return d.toISOString().slice(0,10)}
+  // Monday (YYYY-MM-DD) of the week containing a date
+  function mondayOf(id){var d=utc(id),dow=(d.getUTCDay()+6)%7;return iso(new Date(d.getTime()-dow*DAY))}
+  function addDays(id,n){return iso(new Date(utc(id).getTime()+n*DAY))}
+  function fmt(id,opts){opts.timeZone="UTC";return new Intl.DateTimeFormat("en-AU",opts).format(utc(id))}
+  function fmtTime(isoStr){
+    return new Intl.DateTimeFormat("en-AU",{timeZone:TZ,hour:"numeric",minute:"2-digit",hour12:true}).format(new Date(isoStr)).replace(":",".").replace(/\s/g,"").toLowerCase();
   }
-  function fmtTime(iso){
-    var d=new Date(iso);if(isNaN(d))return "";
-    return new Intl.DateTimeFormat("en-AU",{timeZone:TZ,hour:"numeric",minute:"2-digit",hour12:true}).format(d).replace(":",".").replace(/\s/g,"").toLowerCase();
-  }
-  function fmtRange(satId){
-    var sat=new Date(satId+"T00:00:00Z"),sun=new Date(sat.getTime()+864e5);
-    var m=function(d){return new Intl.DateTimeFormat("en-AU",{timeZone:"UTC",month:"long"}).format(d)};
-    return sat.getUTCMonth()===sun.getUTCMonth()? sat.getUTCDate()+" to "+sun.getUTCDate()+" "+m(sun) : sat.getUTCDate()+" "+m(sat)+" to "+sun.getUTCDate()+" "+m(sun);
-  }
-  function dayDate(satId,off){
-    var d=new Date(new Date(satId+"T00:00:00Z").getTime()+off*864e5);
-    return new Intl.DateTimeFormat("en-AU",{timeZone:"UTC",weekday:"long",day:"numeric",month:"long"}).format(d);
+  function fmtRange(mon){
+    var sun=addDays(mon,6);
+    return utc(mon).getUTCMonth()===utc(sun).getUTCMonth()
+      ? utc(mon).getUTCDate()+" to "+fmt(sun,{day:"numeric",month:"long"})
+      : fmt(mon,{day:"numeric",month:"long"})+" to "+fmt(sun,{day:"numeric",month:"long"});
   }
 
-  function pickIndex(){
-    if(!state.docs.length)return -1;
-    var t=targetSaturday(new Date());
-    for(var i=0;i<state.docs.length;i++)if(state.docs[i].id===t)return i;
-    for(var j=state.docs.length-1;j>=0;j--)if(state.docs[j].id<t)return j;
-    return 0;
-  }
+  var all=(DATA.fixtures||[]).filter(function(f){return f.start||f.date});
+  all.forEach(function(f,i){f._id=i});
+  var today=melbDate(new Date()), thisWeek=mondayOf(today);
+  var weeks=[];all.forEach(function(f){var w=mondayOf(fxDate(f));if(weeks.indexOf(w)<0)weeks.push(w)});
+  if(weeks.indexOf(thisWeek)<0)weeks.push(thisWeek);
+  weeks.sort();
+  state.week=thisWeek;
 
   function render(){
     var days=$("days");days.textContent="";
-    var doc=state.docs[state.idx];
-    $("prev").disabled=!(state.idx>0);
-    $("next").disabled=!(state.idx>=0&&state.idx<state.docs.length-1);
-    if(!doc){
-      var e=el("div","empty");e.appendChild(el("strong",null,"No fixture list yet"));
-      e.appendChild(document.createTextNode("The weekend's women's sport lands here each Thursday morning."));
-      days.appendChild(e);$("filters").hidden=true;$("comingWrap").hidden=true;$("foot").hidden=true;return;
-    }
-    var target=targetSaturday(new Date());
-    $("heading").textContent=(doc.id===target?"This weekend":doc.id>target?"Next up":"Last time")+", "+fmtRange(doc.id);
-    var all=(doc.fixtures||[]).slice().sort(function(a,b){return String(a.start||"9").localeCompare(String(b.start||"9"))});
-    var goCount=all.filter(function(f){return f.local}).length;
+    var wi=weeks.indexOf(state.week);
+    $("prev").disabled=wi<=0;$("next").disabled=wi>=weeks.length-1;
+    var label=state.week===thisWeek?"This week":state.week===addDays(thisWeek,7)?"Next week":state.week===addDays(thisWeek,-7)?"Last week":"Week of";
+    $("heading").textContent=label+", "+fmtRange(state.week);
+    var wk=all.filter(function(f){return mondayOf(fxDate(f))===state.week})
+      .sort(function(a,b){return (fxDate(a)+(a.start||"~")).localeCompare(fxDate(b)+(b.start||"~"))});
+    var goCount=wk.filter(function(f){return f.local}).length;
     var sum=$("summary");sum.textContent="";
-    var b1=el("b",null,all.length+" events");sum.appendChild(b1);
-    sum.appendChild(document.createTextNode(" across the weekend, "));
+    sum.appendChild(el("b",null,wk.length+(wk.length===1?" event":" events")));
+    sum.appendChild(document.createTextNode(" this week, "));
     sum.appendChild(el("b",null,goCount+" you can go to"));
-    sum.appendChild(document.createTextNode(" in Victoria. All times are Melbourne time."+(doc.note?" "+doc.note:"")));
+    sum.appendChild(document.createTextNode(" in Victoria. All times are Melbourne time."));
 
-    // filters
-    var sports=[];all.forEach(function(f){if(f.sport&&sports.indexOf(f.sport)<0)sports.push(f.sport)});
+    var sports=[];wk.forEach(function(f){if(f.sport&&sports.indexOf(f.sport)<0)sports.push(f.sport)});
+    var follow=DATA.follow||[];
+    follow.forEach(function(x){if(x.sport&&sports.indexOf(x.sport)<0)sports.push(x.sport)});
     if(state.sport!=="all"&&sports.indexOf(state.sport)<0)state.sport="all";
     var fl=$("filters");fl.textContent="";fl.hidden=false;
-    function chip(label,pressed,cls,fn){var c=el("button","chip"+(cls?" "+cls:""),label);c.type="button";c.setAttribute("aria-pressed",pressed?"true":"false");c.addEventListener("click",fn);fl.appendChild(c)}
+    function chip(text,pressed,cls,fn){var c=el("button","chip"+(cls?" "+cls:""),text);c.type="button";c.setAttribute("aria-pressed",pressed?"true":"false");c.addEventListener("click",fn);fl.appendChild(c)}
     chip("Everything",state.sport==="all",null,function(){state.sport="all";save();render()});
     sports.forEach(function(sp){chip(sp,state.sport===sp,null,function(){state.sport=sp;save();render()})});
     chip("Go in person",state.goOnly,"go",function(){state.goOnly=!state.goOnly;save();render()});
 
-    var shown=all.filter(function(f){return (state.sport==="all"||f.sport===state.sport)&&(!state.goOnly||f.local)});
+    var shown=wk.filter(function(f){return (state.sport==="all"||f.sport===state.sport)&&(!state.goOnly||f.local)});
     var now=Date.now();
-    [["fri","Friday night",-1],["sat","Saturday",0],["sun","Sunday",1]].forEach(function(d){
-      var list=shown.filter(function(f){return f.day===d[0]});
+    for(var i=0;i<7;i++){(function(id){
+      var list=shown.filter(function(f){return fxDate(f)===id});
       if(!list.length)return;
-      var sec=el("section","day");
-      var h=el("h2",null,d[1]);h.appendChild(el("span",null,dayDate(doc.id,d[2])));sec.appendChild(h);
+      var sec=el("section","day"+(id===today?" today":""));
+      var h=el("h2",null,fmt(id,{weekday:"long"}));h.appendChild(el("span",null,fmt(id,{day:"numeric",month:"long"})));sec.appendChild(h);
       list.forEach(function(f){
         var row=el("article","fx");
+        var lv=state.live[f._id];
         if(f.start&&new Date(f.start).getTime()+3*36e5<now)row.className+=" past";
         var t=el("div","time",f.start?fmtTime(f.start):(f.timeText||"TBC"));
         if(f.start&&f.timeText)t.appendChild(el("small",null,f.timeText));
@@ -504,7 +829,13 @@ window.HER_WEEKEND = {
         var body=el("div","body");
         body.appendChild(el("div","comp",[f.sport,f.comp].filter(Boolean).join(" · ")));
         body.appendChild(el("div","title",f.title||""));
-        if(f.result){row.className+=" done";var r=el("div","result");r.appendChild(el("span",null,"Result"));r.appendChild(document.createTextNode(f.result));body.appendChild(r);}
+        if(lv&&lv.state==="in"){
+          row.className=row.className.replace(" past","")+" done";
+          var r1=el("div","result live");r1.appendChild(el("span",null,"Live"));r1.appendChild(document.createTextNode(lv.text));body.appendChild(r1);
+        }else if(f.result||(lv&&lv.state==="post")){
+          row.className+=" done";
+          var r=el("div","result");r.appendChild(el("span",null,"Result"));r.appendChild(document.createTextNode(f.result||lv.text));body.appendChild(r);
+        }
         if(f.venue)body.appendChild(el("div","where",f.venue));
         if((f.aussies||[]).length){var au=el("div","aussies");au.appendChild(el("b",null,"Aussies: "));au.appendChild(document.createTextNode(f.aussies.join(", ")));body.appendChild(au);}
         var tags=el("div","tags");
@@ -515,32 +846,90 @@ window.HER_WEEKEND = {
         row.appendChild(body);sec.appendChild(row);
       });
       days.appendChild(sec);
-    });
+    })(addDays(state.week,i));}
     if(!shown.length){
-      var e2=el("div","empty");e2.appendChild(el("strong",null,"Nothing matches those filters"));
-      e2.appendChild(document.createTextNode("Choose Everything to see the full weekend."));days.appendChild(e2);
+      var e2=el("div","empty");
+      var fw=null;follow.forEach(function(x){if(x.sport===state.sport)fw=x});
+      if(state.sport!=="all"&&!wk.some(function(f){return f.sport===state.sport})){
+        e2.appendChild(el("strong",null,"No "+state.sport+" this week"));
+        e2.appendChild(document.createTextNode(fw&&fw.next?fw.next:"Nothing scheduled."));
+      }else if(!wk.length){
+        e2.appendChild(el("strong",null,"Nothing listed for this week yet"));
+        e2.appendChild(document.createTextNode("Fixtures are added week by week."));
+      }else{
+        e2.appendChild(el("strong",null,"Nothing matches those filters"));
+        e2.appendChild(document.createTextNode("Choose Everything to see the full week."));
+      }
+      days.appendChild(e2);
     }
-    days.style.display="flex";days.style.flexDirection="column";days.style.gap="28px";
-
-    var cu=$("coming");cu.textContent="";
-    (doc.comingUp||[]).forEach(function(c){var li=el("li");li.appendChild(el("b",null,c.when||""));li.appendChild(el("span",null,c.text||""));cu.appendChild(li)});
-    $("comingWrap").hidden=!(doc.comingUp||[]).length;
-
     $("foot").hidden=false;
-    $("updated").textContent=doc.updated?"Fixture list checked "+doc.updated+".":"";
+    $("updated").textContent=DATA.updated?"Fixture list checked "+DATA.updated+".":"";
     var src=$("sources");src.textContent="";
-    var list2=(doc.sources||[]).filter(function(s){return s&&/^https:\/\//.test(s.url||"")});
+    var list2=(DATA.sources||[]).filter(function(s){return s&&/^https:\/\//.test(s.url||"")});
     if(list2.length){src.appendChild(document.createTextNode("Sources: "));
       list2.forEach(function(s,i){var a=el("a",null,s.label||s.url);a.href=s.url;a.target="_blank";a.rel="noopener";src.appendChild(a);if(i<list2.length-1)src.appendChild(document.createTextNode(", "))});}
   }
 
-  $("prev").addEventListener("click",function(){if(state.idx>0){state.idx--;state.userNav=true;render()}});
-  $("next").addEventListener("click",function(){if(state.idx<state.docs.length-1){state.idx++;state.userNav=true;render()}});
+  $("prev").addEventListener("click",function(){var i=weeks.indexOf(state.week);if(i>0){state.week=weeks[i-1];render();loadScores()}});
+  $("next").addEventListener("click",function(){var i=weeks.indexOf(state.week);if(i<weeks.length-1){state.week=weeks[i+1];render();loadScores()}});
 
-  var w=(window.HER_WEEKEND||{}).weekends||{};
-  state.docs=Object.keys(w).sort().map(function(id){var x=w[id]||{};x.id=id;return x});
-  state.idx=pickIndex();
-  render();
+  // LIVE SCORES: fixtures with a "feed" are matched against ESPN's public scoreboard by start time and team name.
+  function usDate(isoStr){
+    var p={};new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date(isoStr)).forEach(function(x){p[x.type]=x.value});
+    return p.year+p.month+p.day;
+  }
+  function scoreText(ev){
+    var c=((ev.competitions||[])[0]||{}).competitors||[];
+    var home=c.filter(function(x){return x.homeAway==="home"})[0]||c[0],away=c.filter(function(x){return x.homeAway==="away"})[0]||c[1];
+    if(!home||!away)return "";
+    function nm(x){return (x.team&&(x.team.shortDisplayName||x.team.displayName))||""}
+    var st=(ev.status&&ev.status.type)||{};
+    return nm(home)+" "+home.score+", "+nm(away)+" "+away.score+(st.state==="in"&&st.shortDetail?" · "+st.shortDetail:"");
+  }
+  function matchEvent(f,events){
+    var t=new Date(f.start).getTime(),title=(f.title||"").toLowerCase();
+    var names=(f.feedTeams||[]).map(function(x){return x.toLowerCase()});
+    for(var i=0;i<events.length;i++){
+      var ev=events[i];if(Math.abs(new Date(ev.date).getTime()-t)>3*36e5)continue;
+      var c=((ev.competitions||[])[0]||{}).competitors||[];
+      var hit=c.some(function(x){var tm=x.team||{};return [tm.displayName,tm.shortDisplayName,tm.name,tm.location].some(function(n){
+        if(!n)return false;n=n.toLowerCase();return title.indexOf(n)>=0||names.indexOf(n)>=0})});
+      if(hit||c.length===0||/to be decided/.test(title))return ev;
+    }
+    return null;
+  }
+  var timer=null;
+  function loadScores(){
+    var now=Date.now();
+    var need=all.filter(function(f){return f.feed&&f.start&&!f.result&&mondayOf(fxDate(f))===state.week&&new Date(f.start).getTime()<now+10*6e4&&!(state.live[f._id]&&state.live[f._id].state==="post")});
+    var groups={};need.forEach(function(f){var k=f.feed+"|"+usDate(f.start);(groups[k]=groups[k]||[]).push(f)});
+    var keys=Object.keys(groups);if(!keys.length)return;
+    Promise.all(keys.map(function(k){
+      var p=k.split("|");
+      return fetch("https://site.api.espn.com/apis/site/v2/sports/"+p[0]+"/scoreboard?dates="+p[1]).then(function(r){return r.ok?r.json():null}).then(function(j){
+        if(!j||!j.events)return;
+        groups[k].forEach(function(f){var ev=matchEvent(f,j.events);if(!ev)return;
+          var st=(ev.status&&ev.status.type)||{};if(st.state==="in"||st.state==="post")state.live[f._id]={state:st.state,text:scoreText(ev),src:"espn"}});
+      }).catch(function(){});
+    })).then(function(){
+      render();
+      var active=need.some(function(f){var lv=state.live[f._id];return !(lv&&lv.state==="post")&&now-new Date(f.start).getTime()<5*36e5});
+      clearTimeout(timer);if(active)timer=setTimeout(loadScores,60000);
+    });
+  }
+
+  // SCORES FILE: scores.json is written by the GitHub Action (scripts/update-scores.mjs) and sits beside this page.
+  function loadFile(){
+    fetch("scores.json?t="+Date.now()).then(function(r){return r.ok?r.json():null}).then(function(j){
+      if(!j||!j.scores)return;
+      all.forEach(function(f){var s=j.scores[(f.start||f.date)+"|"+f.title];var cur=state.live[f._id];
+        if(s&&!(cur&&cur.src==="espn"&&cur.state==="in"))state.live[f._id]={state:s.state,text:s.text,src:"file"}});
+      render();
+    }).catch(function(){});
+  }
+  render();loadScores();loadFile();
+  setInterval(loadFile,60000);
+  setInterval(function(){if(!timer)loadScores()},5*60000);
 })();
 </script>
 </body>
