@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Her Weekend</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+html{color-scheme:light dark}
+body{margin:0}
+[hidden]{display:none!important}
+/* Layout: a match-day running sheet. One column, three day blocks, kick-off time in a fixed left rail so the eye runs down the clock. */
+:root{
+  --bg:#f5f3f8; --surface:#ffffff; --ink:#221a2d; --muted:#665c73; --line:#ddd6e6;
+  --accent:#a8166f; --accent-soft:#f6dcec; --go:#0b6f62; --go-soft:#d6efe9; --chip:#ebe6f1;
+  --display:"Bricolage Grotesque","Figtree",system-ui,sans-serif;
+  --body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#17121e; --surface:#211a2b; --ink:#f1ecf6; --muted:#a99fb7; --line:#372d45;
+    --accent:#ff7cc4; --accent-soft:#45203a; --go:#5fd6c3; --go-soft:#16372f; --chip:#2c2338;
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45;padding-inline:16px;padding-block:28px 56px}
+.wrap{max-width:760px;margin-inline:auto;display:flex;flex-direction:column;gap:28px}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.masthead{display:flex;flex-direction:column;gap:10px}
+.brand{font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.weekrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(34px,8vw,56px);line-height:1;margin:0;letter-spacing:-.02em;text-wrap:balance;flex:1 1 auto;min-width:0}
+.nav{display:flex;gap:6px}
+.nav button{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--surface);font-size:18px;line-height:1}
+.nav button:disabled{opacity:.35;cursor:default}
+.summary{color:var(--muted);margin:0;max-width:60ch}
+.summary b{color:var(--ink);font-weight:600}
+
+.filters{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font-size:14px;font-weight:600}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip.go[aria-pressed="true"]{background:var(--go);border-color:var(--go);color:var(--bg)}
+
+.day{display:flex;flex-direction:column}
+.day h2{font-family:var(--display);font-weight:700;font-size:24px;margin:0 0 4px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.day h2 span{font-family:var(--body);font-size:14px;font-weight:500;color:var(--muted)}
+.fx{display:grid;grid-template-columns:84px minmax(0,1fr);gap:14px;padding-block:14px;border-top:1px solid var(--line)}
+.time{font-family:var(--display);font-weight:700;font-size:19px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.time small{display:block;font-family:var(--body);font-weight:500;font-size:12px;color:var(--muted);white-space:normal}
+.body{min-width:0;display:flex;flex-direction:column;gap:5px}
+.comp{font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--accent)}
+.title{font-size:18px;font-weight:700;line-height:1.25;overflow-wrap:anywhere}
+.where{color:var(--muted);font-size:14.5px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:3px}
+.tag{font-size:12.5px;font-weight:600;padding:3px 9px;border-radius:6px;background:var(--chip)}
+.tag.go{background:var(--go-soft);color:var(--go)}
+.note{font-size:13.5px;color:var(--muted)}
+.aussies{font-size:14.5px}
+.aussies b{color:var(--go);font-weight:700}
+.fx.past{opacity:.5}
+.fx.done{opacity:1}
+.fx.done .time{color:var(--muted)}
+.result{font-family:var(--display);font-weight:700;font-size:16px;background:var(--accent-soft);color:var(--ink);border-radius:8px;padding:6px 10px;align-self:flex-start;overflow-wrap:anywhere}
+.result span{font-family:var(--body);font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin-right:8px}
+
+.empty{border:1px dashed var(--line);border-radius:14px;padding:28px 20px;color:var(--muted);text-align:left}
+.empty strong{display:block;color:var(--ink);font-family:var(--display);font-size:20px;margin-bottom:6px}
+
+.next h2{font-family:var(--display);font-weight:700;font-size:20px;margin:0 0 8px}
+.next ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.next li{display:grid;grid-template-columns:84px minmax(0,1fr);gap:14px;font-size:15px}
+.next li b{font-weight:700;font-variant-numeric:tabular-nums}
+footer{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:16px}
+footer a{color:var(--accent)}
+@media (max-width:440px){.fx,.next li{grid-template-columns:68px minmax(0,1fr);gap:10px}.time{font-size:17px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <div class="brand">Her Weekend</div>
+    <div class="weekrow">
+      <h1 id="heading">This weekend</h1>
+      <div class="nav">
+        <button id="prev" type="button" aria-label="Earlier weekend" disabled>&#8592;</button>
+        <button id="next" type="button" aria-label="Later weekend" disabled>&#8594;</button>
+      </div>
+    </div>
+    <p class="summary" id="summary">Women's sport you can watch or go to, in Melbourne time.</p>
+  </header>
+
+  <div class="filters" id="filters" hidden></div>
+
+  <main id="days">
+    <div class="empty" id="empty"><strong>Loading the fixture list</strong>This page shows the weekend's women's sport: what's on, when it starts in Melbourne, where to watch and which games you can get to in person.</div>
+  </main>
+
+  <section class="next" id="comingWrap" hidden>
+    <h2>Coming up</h2>
+    <ul id="coming"></ul>
+  </section>
+
+  <footer id="foot" hidden>
+    <div id="updated"></div>
+    <div id="sources"></div>
+    <div>Times and channels can move late. Check the broadcaster before you settle in.</div>
+  </footer>
+</div>
+<script>
+/* WEEKLY UPDATE: add each new weekend here, keyed by the Saturday date (YYYY-MM-DD).
+   SCORES: once a game is finished, add "result": "Bulldogs 6.4 (40) def Essendon 4.5 (29)" to that fixture and it shows on the page. */
+window.HER_WEEKEND = {
+  "weekends": {
+    "2026-10-10": {
+      "updated": "Friday 9 October 2026",
+      "note": "",
+      "fixtures": [
+        {
+          "day": "fri",
+          "start": "2026-10-09T14:50:00+11:00",
+          "timeText": "approx, sources differ",
+          "sport": "Cricket",
+          "comp": "ODI series, game 1",
+          "title": "Australia v Bangladesh",
+          "venue": "Allan Border Field, Brisbane",
+          "watch": [
+            "Seven",
+            "7plus",
+            "Kayo"
+          ],
+          "local": false,
+          "note": "Published start times range from 2.50pm to 3.20pm Melbourne time."
+        },
+        {
+          "day": "fri",
+          "start": "2026-10-09T19:15:00+11:00",
+          "sport": "AFLW",
+          "comp": "Round 9",
+          "title": "Western Bulldogs v Essendon",
+          "venue": "Mission Whitten Oval, Footscray",
+          "watch": [
+            "7mate",
+            "7plus",
+            "Fox Footy",
+            "Kayo"
+          ],
+          "local": true,
+          "note": "Gates open 6pm."
+        },
+        {
+          "day": "sat",
+          "start": "2026-10-10T05:30:00+11:00",
+          "sport": "Football",
+          "comp": "International friendly",
+          "title": "Germany v Matildas",
+          "venue": "BBBank Wildpark, Karlsruhe",
+          "watch": [
+            "Paramount+"
+          ],
+          "local": false
+        },
+        {
+          "day": "sat",
+          "start": "2026-10-10T13:05:00+11:00",
+          "sport": "AFLW",
+          "comp": "Round 9",
+          "title": "St Kilda v Collingwood",
+          "venue": "RSEA Park, Moorabbin",
+          "watch": [
+            "Fox Footy",
+            "Kayo",
+            "7plus"
+          ],
+          "local": true
+        },
+        {
+          "day": "sat",
+          "start": "2026-10-10T15:05:00+11:00",
+          "sport": "AFLW",
+          "comp": "Round 9",
+          "title": "Port Adelaide v West Coast",
+          "venue": "Alberton Oval, Adelaide",
+          "watch": [
+            "Fox Footy",
+            "Kayo",
+            "7plus"
+          ],
+          "local": false
+        },
+        {
+          "day": "sat",
+          "start": "2026-10-10T17:05:00+11:00",
+          "sport": "AFLW",
+          "comp": "Round 9",
+          "title": "Geelong v GWS Giants",
+          "venue": "GMHBA Stadium, Geelong",
+          "watch": [
+            "Fox Footy",
+            "Kayo",
+            "7plus"
+          ],
+          "local": true
+        },
+        {
+          "day": "sat",
+          "start": "2026-10-10T19:15:00+11:00",
+          "sport": "AFLW",
+          "comp": "Round 9",
+          "title": "Richmond v Adelaide",
+          "venue": "Ikon Park, Carlton",
+          "watch": [
+            "Fox Footy",
+            "Kayo",
+            "7plus"
+          ],
+          "local": true
+        },
+        {
+          "day": "sat",
+          "start": "2026-10-10T20:15:00+11:00",
+          "sport": "AFLW",
+          "comp": "Round 9",
+          "title": "Gold Coast v Melbourne",
+          "venue": "Great Barrier Reef Arena, Mackay",
+          "watch": [
+            "Fox Footy",
+            "Kayo",
+            "7plus"
+          ],
+          "local": false
+        },
+        {
+          "day": "sun",
+          "start": "2026-10-11T12:35:00+11:00",
+          "sport": "AFLW",
+          "comp": "Round 9",
+          "title": "North Melbourne v Fremantle",
+          "venue": "Arden Street Oval, North Melbourne",
+          "watch": [
+            "Fox Footy",
+            "Kayo",
+            "7plus"
+          ],
+          "local": true
+        },
+        {
+          "day": "sun",
+          "start": "2026-10-11T13:05:00+11:00",
+          "sport": "AFLW",
+          "comp": "Round 9",
+          "title": "Hawthorn v Brisbane",
+          "venue": "Kennedy Community Centre, Dingley",
+          "watch": [
+            "Fox Footy",
+            "Kayo",
+            "7plus"
+          ],
+          "local": true
+        },
+        {
+          "day": "sun",
+          "start": "2026-10-11T14:50:00+11:00",
+          "timeText": "approx, sources differ",
+          "sport": "Cricket",
+          "comp": "ODI series, game 2",
+          "title": "Australia v Bangladesh",
+          "venue": "Allan Border Field, Brisbane",
+          "watch": [
+            "Seven",
+            "7plus",
+            "Kayo"
+          ],
+          "local": false
+        },
+        {
+          "day": "sun",
+          "start": "2026-10-11T15:05:00+11:00",
+          "sport": "AFLW",
+          "comp": "Round 9",
+          "title": "Sydney v Carlton",
+          "venue": "Henson Park, Sydney",
+          "watch": [
+            "Fox Footy",
+            "Kayo",
+            "7plus"
+          ],
+          "local": false
+        },
+        {
+          "day": "sun",
+          "timeText": "Time TBC",
+          "sport": "Hockey",
+          "comp": "Hockey One",
+          "title": "Melbourne Cobras v NSW Pride",
+          "venue": "Melbourne Sports Centre, Parkville",
+          "watch": [],
+          "local": true,
+          "note": "Start time and home side not confirmed in the sources checked. Look at hockeyone.com.au before heading out."
+        },
+        {
+          "day": "sat",
+          "start": "2026-10-10T10:30:00+11:00",
+          "sport": "WNBA",
+          "comp": "Semi-final, game 3",
+          "title": "New York Liberty v Atlanta Dream",
+          "venue": "Barclays Center, Brooklyn",
+          "watch": [
+            "ESPN",
+            "Kayo",
+            "Disney+"
+          ],
+          "local": false,
+          "note": "Dream lead 2-0 and go through with a win. Best-of-five series. Australian coverage is normally on ESPN; check the guide on the day.",
+          "aussies": [
+            "Rebecca Allen (Liberty)",
+            "Anneli Maley (Liberty)",
+            "Isobel Borlase (Dream)"
+          ]
+        },
+        {
+          "day": "sat",
+          "start": "2026-10-10T12:30:00+11:00",
+          "sport": "WNBA",
+          "comp": "Semi-final, game 3",
+          "title": "Las Vegas Aces v Golden State Valkyries",
+          "venue": "Michelob ULTRA Arena, Las Vegas",
+          "watch": [
+            "ESPN",
+            "Kayo",
+            "Disney+"
+          ],
+          "local": false,
+          "note": "Valkyries lead 2-0 and go through with a win. Best-of-five series. Australian coverage is normally on ESPN; check the guide on the day.",
+          "aussies": [
+            "Stephanie Talbot (Aces)",
+            "Miela Sowah (Valkyries)"
+          ]
+        }
+      ],
+      "comingUp": [
+        {
+          "when": "Mon 12 Oct",
+          "text": "WNBA semi-finals game 4, only if needed: Liberty v Dream 5.00am, Aces v Valkyries time not set"
+        },
+        {
+          "when": "Mon 12 Oct",
+          "text": "Wuhan Open main draw starts (WTA 1000), final Sunday 18 October"
+        },
+        {
+          "when": "Wed 14 Oct",
+          "text": "Australia v Bangladesh, third ODI, Brisbane"
+        },
+        {
+          "when": "Thu 15 Oct",
+          "text": "WNBL season tips off: Tasmania Jewels v Geelong Venom"
+        },
+        {
+          "when": "Fri 16 Oct",
+          "text": "A-League Women season starts"
+        },
+        {
+          "when": "Sun 18 Oct",
+          "text": "Constellation Cup game 1, Diamonds v Silver Ferns, Auckland"
+        },
+        {
+          "when": "Sun 18 Oct",
+          "text": "WNBA Finals game 1, 6.30am Melbourne time"
+        },
+        {
+          "when": "Wed 28 Oct",
+          "text": "Constellation Cup game 4 at John Cain Arena, Melbourne"
+        },
+        {
+          "when": "Thu 29 Oct",
+          "text": "WBBL season starts"
+        }
+      ],
+      "sources": [
+        {
+          "label": "Austadiums AFLW fixture",
+          "url": "https://www.austadiums.com/sport/comp/aflw/fixture"
+        },
+        {
+          "label": "Western Bulldogs game-day guide",
+          "url": "https://www.westernbulldogs.com.au/news/2147251/aflw-game-day-guide-round-9-v-essendon"
+        },
+        {
+          "label": "Football360 Matildas guide",
+          "url": "https://football360.com.au/how-to-watch-australia-germany-matildas-live-stream-kick-off-time-date/"
+        },
+        {
+          "label": "Wisden ODI series guide",
+          "url": "https://www.wisden.com/series/australia-vs-bangladesh-w-2026/cricket-news/aus-w-vs-ban-w-odis-all-you-need-to-know-full-schedule-squads-venues-and-live-streaming-details"
+        },
+        {
+          "label": "Hockey NSW",
+          "url": "https://www.hockeynsw.com.au/news/hockey-one-returns-home-to-olympic-park"
+        },
+        {
+          "label": "cricket.com.au domestic schedule",
+          "url": "https://www.cricket.com.au/news/4536027/womens-domestic-schedule-released-for-2026-27-summer-of-cricket"
+        },
+        {
+          "label": "NBC Sports WNBA playoff schedule",
+          "url": "https://www.nbcsports.com/wnba/news/2026-wnba-playoffs-full-schedule-bracket-matchups-dates-preview"
+        },
+        {
+          "label": "basketball.com.au Aussies in the WNBA semis",
+          "url": "https://www.basketball.com.au/news/wnba-semi-finals-2026-australians"
+        }
+      ]
+    }
+  }
+};
+</script>
+<script>
+(function(){
+  var TZ="Australia/Melbourne";
+  var state={docs:[],idx:-1,sport:"all",goOnly:false,userNav:false};
+  try{var s=JSON.parse(localStorage.getItem("hw-filters")||"{}");if(s.sport)state.sport=s.sport;state.goOnly=!!s.goOnly;}catch(e){}
+  function save(){try{localStorage.setItem("hw-filters",JSON.stringify({sport:state.sport,goOnly:state.goOnly}));}catch(e){}}
+  function $(id){return document.getElementById(id)}
+  function el(tag,cls,text){var n=document.createElement(tag);if(cls)n.className=cls;if(text!=null)n.textContent=text;return n}
+
+  function melbParts(d){
+    var p={};new Intl.DateTimeFormat("en-AU",{timeZone:TZ,year:"numeric",month:"2-digit",day:"2-digit",weekday:"short"}).formatToParts(d).forEach(function(x){p[x.type]=x.value});
+    return p;
+  }
+  // Saturday (YYYY-MM-DD) of the weekend that matters now: Mon-Sun all point at that week's Saturday.
+  function targetSaturday(now){
+    var p=melbParts(now);
+    var dow={Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6,Sun:7}[p.weekday.slice(0,3)]||6;
+    var base=Date.UTC(+p.year,+p.month-1,+p.day);
+    return new Date(base+(6-dow)*864e5).toISOString().slice(0,10);
+  }
+  function fmtTime(iso){
+    var d=new Date(iso);if(isNaN(d))return "";
+    return new Intl.DateTimeFormat("en-AU",{timeZone:TZ,hour:"numeric",minute:"2-digit",hour12:true}).format(d).replace(":",".").replace(/\s/g,"").toLowerCase();
+  }
+  function fmtRange(satId){
+    var sat=new Date(satId+"T00:00:00Z"),sun=new Date(sat.getTime()+864e5);
+    var m=function(d){return new Intl.DateTimeFormat("en-AU",{timeZone:"UTC",month:"long"}).format(d)};
+    return sat.getUTCMonth()===sun.getUTCMonth()? sat.getUTCDate()+" to "+sun.getUTCDate()+" "+m(sun) : sat.getUTCDate()+" "+m(sat)+" to "+sun.getUTCDate()+" "+m(sun);
+  }
+  function dayDate(satId,off){
+    var d=new Date(new Date(satId+"T00:00:00Z").getTime()+off*864e5);
+    return new Intl.DateTimeFormat("en-AU",{timeZone:"UTC",weekday:"long",day:"numeric",month:"long"}).format(d);
+  }
+
+  function pickIndex(){
+    if(!state.docs.length)return -1;
+    var t=targetSaturday(new Date());
+    for(var i=0;i<state.docs.length;i++)if(state.docs[i].id===t)return i;
+    for(var j=state.docs.length-1;j>=0;j--)if(state.docs[j].id<t)return j;
+    return 0;
+  }
+
+  function render(){
+    var days=$("days");days.textContent="";
+    var doc=state.docs[state.idx];
+    $("prev").disabled=!(state.idx>0);
+    $("next").disabled=!(state.idx>=0&&state.idx<state.docs.length-1);
+    if(!doc){
+      var e=el("div","empty");e.appendChild(el("strong",null,"No fixture list yet"));
+      e.appendChild(document.createTextNode("The weekend's women's sport lands here each Thursday morning."));
+      days.appendChild(e);$("filters").hidden=true;$("comingWrap").hidden=true;$("foot").hidden=true;return;
+    }
+    var target=targetSaturday(new Date());
+    $("heading").textContent=(doc.id===target?"This weekend":doc.id>target?"Next up":"Last time")+", "+fmtRange(doc.id);
+    var all=(doc.fixtures||[]).slice().sort(function(a,b){return String(a.start||"9").localeCompare(String(b.start||"9"))});
+    var goCount=all.filter(function(f){return f.local}).length;
+    var sum=$("summary");sum.textContent="";
+    var b1=el("b",null,all.length+" events");sum.appendChild(b1);
+    sum.appendChild(document.createTextNode(" across the weekend, "));
+    sum.appendChild(el("b",null,goCount+" you can go to"));
+    sum.appendChild(document.createTextNode(" in Victoria. All times are Melbourne time."+(doc.note?" "+doc.note:"")));
+
+    // filters
+    var sports=[];all.forEach(function(f){if(f.sport&&sports.indexOf(f.sport)<0)sports.push(f.sport)});
+    if(state.sport!=="all"&&sports.indexOf(state.sport)<0)state.sport="all";
+    var fl=$("filters");fl.textContent="";fl.hidden=false;
+    function chip(label,pressed,cls,fn){var c=el("button","chip"+(cls?" "+cls:""),label);c.type="button";c.setAttribute("aria-pressed",pressed?"true":"false");c.addEventListener("click",fn);fl.appendChild(c)}
+    chip("Everything",state.sport==="all",null,function(){state.sport="all";save();render()});
+    sports.forEach(function(sp){chip(sp,state.sport===sp,null,function(){state.sport=sp;save();render()})});
+    chip("Go in person",state.goOnly,"go",function(){state.goOnly=!state.goOnly;save();render()});
+
+    var shown=all.filter(function(f){return (state.sport==="all"||f.sport===state.sport)&&(!state.goOnly||f.local)});
+    var now=Date.now();
+    [["fri","Friday night",-1],["sat","Saturday",0],["sun","Sunday",1]].forEach(function(d){
+      var list=shown.filter(function(f){return f.day===d[0]});
+      if(!list.length)return;
+      var sec=el("section","day");
+      var h=el("h2",null,d[1]);h.appendChild(el("span",null,dayDate(doc.id,d[2])));sec.appendChild(h);
+      list.forEach(function(f){
+        var row=el("article","fx");
+        if(f.start&&new Date(f.start).getTime()+3*36e5<now)row.className+=" past";
+        var t=el("div","time",f.start?fmtTime(f.start):(f.timeText||"TBC"));
+        if(f.start&&f.timeText)t.appendChild(el("small",null,f.timeText));
+        row.appendChild(t);
+        var body=el("div","body");
+        body.appendChild(el("div","comp",[f.sport,f.comp].filter(Boolean).join(" · ")));
+        body.appendChild(el("div","title",f.title||""));
+        if(f.result){row.className+=" done";var r=el("div","result");r.appendChild(el("span",null,"Result"));r.appendChild(document.createTextNode(f.result));body.appendChild(r);}
+        if(f.venue)body.appendChild(el("div","where",f.venue));
+        if((f.aussies||[]).length){var au=el("div","aussies");au.appendChild(el("b",null,"Aussies: "));au.appendChild(document.createTextNode(f.aussies.join(", ")));body.appendChild(au);}
+        var tags=el("div","tags");
+        if(f.local)tags.appendChild(el("span","tag go","Go in person"));
+        (f.watch||[]).forEach(function(w){tags.appendChild(el("span","tag",w))});
+        if(tags.childNodes.length)body.appendChild(tags);
+        if(f.note)body.appendChild(el("div","note",f.note));
+        row.appendChild(body);sec.appendChild(row);
+      });
+      days.appendChild(sec);
+    });
+    if(!shown.length){
+      var e2=el("div","empty");e2.appendChild(el("strong",null,"Nothing matches those filters"));
+      e2.appendChild(document.createTextNode("Choose Everything to see the full weekend."));days.appendChild(e2);
+    }
+    days.style.display="flex";days.style.flexDirection="column";days.style.gap="28px";
+
+    var cu=$("coming");cu.textContent="";
+    (doc.comingUp||[]).forEach(function(c){var li=el("li");li.appendChild(el("b",null,c.when||""));li.appendChild(el("span",null,c.text||""));cu.appendChild(li)});
+    $("comingWrap").hidden=!(doc.comingUp||[]).length;
+
+    $("foot").hidden=false;
+    $("updated").textContent=doc.updated?"Fixture list checked "+doc.updated+".":"";
+    var src=$("sources");src.textContent="";
+    var list2=(doc.sources||[]).filter(function(s){return s&&/^https:\/\//.test(s.url||"")});
+    if(list2.length){src.appendChild(document.createTextNode("Sources: "));
+      list2.forEach(function(s,i){var a=el("a",null,s.label||s.url);a.href=s.url;a.target="_blank";a.rel="noopener";src.appendChild(a);if(i<list2.length-1)src.appendChild(document.createTextNode(", "))});}
+  }
+
+  $("prev").addEventListener("click",function(){if(state.idx>0){state.idx--;state.userNav=true;render()}});
+  $("next").addEventListener("click",function(){if(state.idx<state.docs.length-1){state.idx++;state.userNav=true;render()}});
+
+  var w=(window.HER_WEEKEND||{}).weekends||{};
+  state.docs=Object.keys(w).sort().map(function(id){var x=w[id]||{};x.id=id;return x});
+  state.idx=pickIndex();
+  render();
+})();
+</script>
+</body>
+</html>
