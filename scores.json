@@ -1,9 +1,13 @@
 {
-  "updated": "2026-10-09T16:40:22.176Z",
+  "updated": "2026-10-09T21:14:31.672Z",
   "scores": {
     "2026-10-09T19:15:00+11:00|Western Bulldogs v Essendon": {
       "state": "post",
       "text": "Western Bulldogs 10.5 (65), Essendon 2.10 (22)"
+    },
+    "2026-10-10T05:30:00+11:00|Germany v Matildas": {
+      "state": "post",
+      "text": "Germany 4, Australia 2"
     }
   }
 }
