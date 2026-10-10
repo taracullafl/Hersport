@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-10T06:27:00.468Z",
+  "updated": "2026-10-10T12:47:56.384Z",
   "scores": {
     "2026-10-09T19:15:00+11:00|Western Bulldogs v Essendon": {
       "state": "post",
@@ -24,6 +24,18 @@
     "2026-10-10T12:30:00+11:00|Las Vegas Aces v Golden State Valkyries": {
       "state": "post",
       "text": "Aces 77, Valkyries 87"
+    },
+    "2026-10-10T17:05:00+11:00|Geelong v GWS Giants": {
+      "state": "post",
+      "text": "Geelong 14.12 (96), GWS Giants 5.3 (33)"
+    },
+    "2026-10-10T19:15:00+11:00|Richmond v Adelaide": {
+      "state": "post",
+      "text": "Richmond 4.6 (30), Adelaide 9.8 (62)"
+    },
+    "2026-10-10T20:15:00+11:00|Gold Coast v Melbourne": {
+      "state": "post",
+      "text": "Gold Coast 9.7 (61), Melbourne 5.9 (39)"
     }
   }
 }
