@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-10T00:50:39.457Z",
+  "updated": "2026-10-10T06:27:00.468Z",
   "scores": {
     "2026-10-09T19:15:00+11:00|Western Bulldogs v Essendon": {
       "state": "post",
@@ -10,8 +10,20 @@
       "text": "Germany 4, Australia 2"
     },
     "2026-10-10T10:30:00+11:00|New York Liberty v Atlanta Dream": {
-      "state": "in",
-      "text": "Liberty 47, Dream 51 · 6:21 - 3rd"
+      "state": "post",
+      "text": "Liberty 83, Dream 85"
+    },
+    "2026-10-10T13:05:00+11:00|St Kilda v Collingwood": {
+      "state": "post",
+      "text": "St Kilda 5.9 (39), Collingwood 5.7 (37)"
+    },
+    "2026-10-10T15:05:00+11:00|Port Adelaide v West Coast": {
+      "state": "post",
+      "text": "Port Adelaide 3.8 (26), West Coast 3.4 (22)"
+    },
+    "2026-10-10T12:30:00+11:00|Las Vegas Aces v Golden State Valkyries": {
+      "state": "post",
+      "text": "Aces 77, Valkyries 87"
     }
   }
 }
