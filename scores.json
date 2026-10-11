@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-10T12:47:56.384Z",
+  "updated": "2026-10-11T08:49:16.132Z",
   "scores": {
     "2026-10-09T19:15:00+11:00|Western Bulldogs v Essendon": {
       "state": "post",
@@ -36,6 +36,18 @@
     "2026-10-10T20:15:00+11:00|Gold Coast v Melbourne": {
       "state": "post",
       "text": "Gold Coast 9.7 (61), Melbourne 5.9 (39)"
+    },
+    "2026-10-11T12:35:00+11:00|North Melbourne v Fremantle": {
+      "state": "post",
+      "text": "North Melbourne 9.4 (58), Fremantle 4.6 (30)"
+    },
+    "2026-10-11T13:05:00+11:00|Hawthorn v Brisbane": {
+      "state": "post",
+      "text": "Hawthorn 9.11 (65), Brisbane 6.4 (40)"
+    },
+    "2026-10-11T15:05:00+11:00|Sydney v Carlton": {
+      "state": "post",
+      "text": "Sydney 4.8 (32), Carlton 8.11 (59)"
     }
   }
 }
