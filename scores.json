@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-11T08:49:16.132Z",
+  "updated": "2026-10-13T20:41:03.615Z",
   "scores": {
     "2026-10-09T19:15:00+11:00|Western Bulldogs v Essendon": {
       "state": "post",
@@ -48,6 +48,10 @@
     "2026-10-11T15:05:00+11:00|Sydney v Carlton": {
       "state": "post",
       "text": "Sydney 4.8 (32), Carlton 8.11 (59)"
+    },
+    "2026-10-14T06:00:00+11:00|Haiti v Matildas": {
+      "state": "in",
+      "text": "Haiti 1, Australia 6 · 84'"
     }
   }
 }
