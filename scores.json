@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-13T23:51:56.055Z",
+  "updated": "2026-10-16T14:11:38.633Z",
   "scores": {
     "2026-10-09T19:15:00+11:00|Western Bulldogs v Essendon": {
       "state": "post",
@@ -52,6 +52,10 @@
     "2026-10-14T06:00:00+11:00|Haiti v Matildas": {
       "state": "post",
       "text": "Haiti 1, Australia 7"
+    },
+    "2026-10-16T19:15:00+11:00|Melbourne v Richmond": {
+      "state": "post",
+      "text": "Melbourne 14.10 (94), Richmond 5.2 (32)"
     }
   }
 }
