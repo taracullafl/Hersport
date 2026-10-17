@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-17T05:24:55.269Z",
+  "updated": "2026-10-17T09:30:28.564Z",
   "scores": {
     "2026-10-09T19:15:00+11:00|Western Bulldogs v Essendon": {
       "state": "post",
@@ -60,6 +60,14 @@
     "2026-10-17T13:05:00+11:00|Adelaide v Gold Coast": {
       "state": "post",
       "text": "Adelaide 10.3 (63), Gold Coast 7.11 (53)"
+    },
+    "2026-10-17T15:05:00+11:00|Carlton v Western Bulldogs": {
+      "state": "post",
+      "text": "Carlton 3.8 (26), Western Bulldogs 8.8 (56)"
+    },
+    "2026-10-17T17:05:00+11:00|Brisbane v Port Adelaide": {
+      "state": "post",
+      "text": "Brisbane 5.4 (34), Port Adelaide 2.6 (18)"
     }
   }
 }
