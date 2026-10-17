@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-17T09:30:28.564Z",
+  "updated": "2026-10-17T16:19:22.227Z",
   "scores": {
     "2026-10-09T19:15:00+11:00|Western Bulldogs v Essendon": {
       "state": "post",
@@ -68,6 +68,10 @@
     "2026-10-17T17:05:00+11:00|Brisbane v Port Adelaide": {
       "state": "post",
       "text": "Brisbane 5.4 (34), Port Adelaide 2.6 (18)"
+    },
+    "2026-10-17T19:15:00+11:00|West Coast v Geelong": {
+      "state": "post",
+      "text": "West Coast 1.7 (13), Geelong 8.18 (66)"
     }
   }
 }
