@@ -1,0 +1,635 @@
+{
+  "updated": "2026-10-20T03:23:22.593Z",
+  "fixtures": [
+    {
+      "start": "2026-10-09T19:15:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 9",
+      "title": "Western Bulldogs v Essendon",
+      "venue": "Mission Whitten Oval, Melbourne",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-10T13:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 9",
+      "title": "St Kilda v Collingwood",
+      "venue": "RSEA Park, Melbourne",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-10T15:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 9",
+      "title": "Port Adelaide v West Coast",
+      "venue": "Alberton Oval, Adelaide",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": false,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-10T17:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 9",
+      "title": "Geelong v GWS Giants",
+      "venue": "GMHBA Stadium, Geelong",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-10T19:15:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 9",
+      "title": "Richmond v Adelaide",
+      "venue": "IKON Park, Melbourne",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-10T20:15:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 9",
+      "title": "Gold Coast v Melbourne",
+      "venue": "Great Barrier Reef Arena, Mackay",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": false,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-11T12:35:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 9",
+      "title": "North Melbourne v Fremantle",
+      "venue": "Arden Street Oval, Melbourne",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-11T13:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 9",
+      "title": "Hawthorn v Brisbane",
+      "venue": "Kennedy Community Centre, Dingley Village",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-11T15:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 9",
+      "title": "Sydney v Carlton",
+      "venue": "Henson Park, Sydney",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": false,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-16T19:15:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 10",
+      "title": "Melbourne v Richmond",
+      "venue": "IKON Park, Melbourne",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-17T13:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 10",
+      "title": "Adelaide v Gold Coast",
+      "venue": "Unley Oval, Adelaide",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": false,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-17T15:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 10",
+      "title": "Carlton v Western Bulldogs",
+      "venue": "IKON Park, Melbourne",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-17T17:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 10",
+      "title": "Brisbane v Port Adelaide",
+      "venue": "Brighton Homes Arena, Ipswich",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": false,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-17T19:15:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 10",
+      "title": "West Coast v Geelong",
+      "venue": "Sullivan Logistics Stadium, Perth",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": false,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-18T12:30:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 10",
+      "title": "Collingwood v Sydney",
+      "venue": "Windy Hill, Melbourne",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-18T14:35:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 10",
+      "title": "GWS Giants v Hawthorn",
+      "venue": "Henson Park, Sydney",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": false,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-18T15:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 10",
+      "title": "Essendon v North Melbourne",
+      "venue": "Windy Hill, Melbourne",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-18T17:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 10",
+      "title": "Fremantle v St Kilda",
+      "venue": "Cockburn ARC Oval, Perth",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": false,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-23T19:15:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 11",
+      "title": "Port Adelaide v Collingwood",
+      "venue": "Alberton Oval, Adelaide",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": false,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-24T13:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 11",
+      "title": "St Kilda v Brisbane",
+      "venue": "RSEA Park, Melbourne",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-24T15:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 11",
+      "title": "Geelong v Fremantle",
+      "venue": "GMHBA Stadium, Geelong",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-24T17:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 11",
+      "title": "Gold Coast v Richmond",
+      "venue": "People First Stadium, Gold Coast",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": false,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-24T19:15:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 11",
+      "title": "Western Bulldogs v Melbourne",
+      "venue": "Mission Whitten Oval, Melbourne",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-25T12:35:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 11",
+      "title": "Sydney v West Coast",
+      "venue": "Henson Park, Sydney",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": false,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-25T13:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 11",
+      "title": "North Melbourne v Adelaide",
+      "venue": "North Hobart Oval, Hobart",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": false,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-25T15:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 11",
+      "title": "Hawthorn v Essendon",
+      "venue": "Kennedy Community Centre, Dingley Village",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-25T17:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 11",
+      "title": "Carlton v GWS Giants",
+      "venue": "IKON Park, Melbourne",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-30T19:15:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 12",
+      "title": "Geelong v Western Bulldogs",
+      "venue": "GMHBA Stadium, Geelong",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-31T13:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 12",
+      "title": "St Kilda v Port Adelaide",
+      "venue": "RSEA Park, Melbourne",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-31T15:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 12",
+      "title": "Richmond v North Melbourne",
+      "venue": "Windy Hill, Melbourne",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-31T17:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 12",
+      "title": "Brisbane v Carlton",
+      "venue": "Brighton Homes Arena, Ipswich",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": false,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-10-31T19:15:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 12",
+      "title": "West Coast v Hawthorn",
+      "venue": "Sullivan Logistics Stadium, Perth",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": false,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-11-01T12:35:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 12",
+      "title": "GWS Giants v Gold Coast",
+      "venue": "Henson Park, Sydney",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": false,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-11-01T13:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 12",
+      "title": "Essendon v Collingwood",
+      "venue": "Windy Hill, Melbourne",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-11-01T15:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 12",
+      "title": "Adelaide v Melbourne",
+      "venue": "Unley Oval, Adelaide",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": false,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-11-01T17:05:00+11:00",
+      "sport": "AFLW",
+      "comp": "Round 12",
+      "title": "Fremantle v Sydney",
+      "venue": "Cockburn ARC Oval, Perth",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": false,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-11-02T12:00:00+11:00",
+      "sport": "AFLW",
+      "comp": "Qualifying & Elimination Finals",
+      "title": "1st v 4th",
+      "venue": "To Be Confirmed, Victoria",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-11-02T12:00:00+11:00",
+      "sport": "AFLW",
+      "comp": "Qualifying & Elimination Finals",
+      "title": "2nd v 3rd",
+      "venue": "To Be Confirmed, Victoria",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-11-02T12:00:00+11:00",
+      "sport": "AFLW",
+      "comp": "Qualifying & Elimination Finals",
+      "title": "5th v 8th",
+      "venue": "To Be Confirmed, Victoria",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-11-02T12:00:00+11:00",
+      "sport": "AFLW",
+      "comp": "Qualifying & Elimination Finals",
+      "title": "6th v 7th",
+      "venue": "To Be Confirmed, Victoria",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-11-09T12:00:00+11:00",
+      "sport": "AFLW",
+      "comp": "Semi Finals",
+      "title": "Loser of QF1 v Winner of EF1",
+      "venue": "To Be Confirmed, Victoria",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-11-09T12:00:00+11:00",
+      "sport": "AFLW",
+      "comp": "Semi Finals",
+      "title": "Loser of QF2 v Winner of EF2",
+      "venue": "To Be Confirmed, Victoria",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-11-16T12:00:00+11:00",
+      "sport": "AFLW",
+      "comp": "Preliminary Finals",
+      "title": "Winner of QF1 v Winner of SF2",
+      "venue": "To Be Confirmed, Victoria",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-11-16T12:00:00+11:00",
+      "sport": "AFLW",
+      "comp": "Preliminary Finals",
+      "title": "Winner of QF2 v Winner of SF1",
+      "venue": "To Be Confirmed, Victoria",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-11-23T12:00:00+11:00",
+      "sport": "AFLW",
+      "comp": "Grand Final",
+      "title": "Winner of PF1 v Winner of PF2",
+      "venue": "To Be Confirmed, Victoria",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    }
+  ]
+}
