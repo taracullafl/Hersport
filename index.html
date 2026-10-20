@@ -779,12 +779,37 @@ window.HER_WEEKEND = {
       : fmt(mon,{day:"numeric",month:"long"})+" to "+fmt(sun,{day:"numeric",month:"long"});
   }
 
-  var all=(DATA.fixtures||[]).filter(function(f){return f.start||f.date});
-  all.forEach(function(f,i){f._id=i});
-  var today=melbDate(new Date()), thisWeek=mondayOf(today);
-  var weeks=[];all.forEach(function(f){var w=mondayOf(fxDate(f));if(weeks.indexOf(w)<0)weeks.push(w)});
-  if(weeks.indexOf(thisWeek)<0)weeks.push(thisWeek);
-  weeks.sort();
+  // AUTOMATIC FIXTURES: fixtures.json is written by the "Update fixtures" GitHub Action (AFLW, WNBA, A-League Women, Matildas).
+  // A typed-in game that is also in the feed is replaced by the feed's version, keeping the typed-in note, Aussies, result and channels.
+  var MANUAL=(DATA.fixtures||[]).filter(function(f){return f.start||f.date}), AUTO=[], autoUpdated=null;
+  var STRIP=["fc","the","women","womens","w","crows","cats","eagles","swans","lions","suns","giants"];
+  function teamKey(s){return String(s||"").toLowerCase().replace(/matildas/g,"australia").replace(/[^a-z0-9 ]/g," ").split(/\s+/).filter(function(w){return w&&STRIP.indexOf(w)<0}).join(" ")}
+  function close(a,b){return !!a&&!!b&&(a===b||a.indexOf(b)===0||b.indexOf(a)===0)}
+  function sameGame(a,m){
+    if(a.sport!==m.sport)return false;
+    var t=m.start?Date.parse(m.start):Date.parse(m.date+"T12:00:00+11:00");
+    if(Math.abs(Date.parse(a.start)-t)>36*36e5)return false;
+    var x=String(a.title).split(/\s+v\s+/),y=String(m.title).split(/\s+v\s+/);
+    return x.length===2&&y.length===2&&close(teamKey(x[0]),teamKey(y[0]))&&close(teamKey(x[1]),teamKey(y[1]));
+  }
+  var all=[],weeks=[],today=melbDate(new Date()),thisWeek=mondayOf(today);
+  function build(){
+    var auto=AUTO.filter(function(f){return f&&f.start&&f.title}).map(function(f){return Object.assign({},f)});
+    var kept=MANUAL.filter(function(m){
+      var a=null;auto.forEach(function(x){if(!a&&sameGame(x,m))a=x});
+      if(!a)return true;
+      ["note","aussies","result"].forEach(function(k){if(m[k]!=null&&a[k]==null)a[k]=m[k]});
+      if((m.watch||[]).length)a.watch=m.watch;
+      return false;
+    });
+    all=kept.concat(auto);
+    all.forEach(function(f,i){f._id=i});
+    weeks=[];all.forEach(function(f){var w=mondayOf(fxDate(f));if(weeks.indexOf(w)<0)weeks.push(w)});
+    if(weeks.indexOf(thisWeek)<0)weeks.push(thisWeek);
+    weeks.sort();
+    state.live={};
+  }
+  build();
   state.week=thisWeek;
 
   function render(){
@@ -794,7 +819,7 @@ window.HER_WEEKEND = {
     var label=state.week===thisWeek?"This week":state.week===addDays(thisWeek,7)?"Next week":state.week===addDays(thisWeek,-7)?"Last week":"Week of";
     $("heading").textContent=label+", "+fmtRange(state.week);
     var wk=all.filter(function(f){return mondayOf(fxDate(f))===state.week})
-      .sort(function(a,b){return (fxDate(a)+(a.start||"~")).localeCompare(fxDate(b)+(b.start||"~"))});
+      .sort(function(a,b){return fxDate(a).localeCompare(fxDate(b))||(a.start?Date.parse(a.start):Infinity)-(b.start?Date.parse(b.start):Infinity)||0});
     var goCount=wk.filter(function(f){return f.local}).length;
     var sum=$("summary");sum.textContent="";
     sum.appendChild(el("b",null,wk.length+(wk.length===1?" event":" events")));
@@ -863,7 +888,7 @@ window.HER_WEEKEND = {
       days.appendChild(e2);
     }
     $("foot").hidden=false;
-    $("updated").textContent=DATA.updated?"Fixture list checked "+DATA.updated+".":"";
+    $("updated").textContent=(autoUpdated?"AFLW, WNBA, A-League Women and Matildas games update automatically (last change "+new Intl.DateTimeFormat("en-AU",{timeZone:TZ,weekday:"long",day:"numeric",month:"long",hour:"numeric",minute:"2-digit"}).format(new Date(autoUpdated))+"). ":"")+(DATA.updated?"Other sports typed in "+DATA.updated+".":"");
     var src=$("sources");src.textContent="";
     var list2=(DATA.sources||[]).filter(function(s){return s&&/^https:\/\//.test(s.url||"")});
     if(list2.length){src.appendChild(document.createTextNode("Sources: "));
@@ -927,7 +952,17 @@ window.HER_WEEKEND = {
       render();
     }).catch(function(){});
   }
-  render();loadScores();loadFile();
+  function loadFixtures(){
+    return fetch("fixtures.json?t="+Date.now()).then(function(r){return r.ok?r.json():null}).then(function(j){
+      if(!j||!Array.isArray(j.fixtures))return;
+      AUTO=j.fixtures;autoUpdated=j.updated||null;
+      var keep=state.week;build();
+      state.week=weeks.indexOf(keep)>=0?keep:thisWeek;
+      render();loadScores();loadFile();
+    }).catch(function(){});
+  }
+  render();loadScores();loadFile();loadFixtures();
+  setInterval(loadFixtures,30*60000);
   setInterval(loadFile,60000);
   setInterval(function(){if(!timer)loadScores()},5*60000);
 })();
