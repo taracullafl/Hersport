@@ -1,0 +1,146 @@
+name: Update fixtures
+on:
+  schedule:
+    - cron: "17 */3 * * *"  # every 3 hours
+  workflow_dispatch:         # lets you run it by hand from the Actions tab
+permissions:
+  contents: write
+concurrency:
+  group: fixtures
+  cancel-in-progress: false
+jobs:
+  fixtures:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Fetch fixtures
+        run: |
+          node --input-type=module <<'FIXTURES_SCRIPT'
+          // Fetches upcoming games from the sports that have a public feed and writes fixtures.json.
+          // index.html loads fixtures.json and adds these games to the typed-in list (typed-in notes are kept).
+          import { readFileSync, writeFileSync, existsSync } from "node:fs";
+
+          const DAY = 864e5, NOW = Date.now();
+          const FROM = NOW - 14 * DAY, TO = NOW + 35 * DAY; // two weeks back, five weeks ahead
+          const VIC_PLACES = /melbourne|geelong|ballarat|bendigo|footscray|carlton|moorabbin|dingley|parkville|wantirna|epping|frankston|casey|cranbourne|preston|bundoora|victoria\b|\bvic\b/i;
+
+          const prev = existsSync("fixtures.json") ? JSON.parse(readFileSync("fixtures.json", "utf8")) : {};
+          const prevFixtures = prev.fixtures || [];
+
+          async function getJson(url) {
+            const r = await fetch(url, { headers: { "user-agent": "her-weekend-fixtures" } });
+            if (!r.ok) throw new Error(url + " returned " + r.status);
+            return r.json();
+          }
+
+          // ISO time written with the Melbourne offset, e.g. 2026-10-24T13:05:00+11:00
+          function melbIso(input) {
+            const d = new Date(input);
+            const p = Object.fromEntries(new Intl.DateTimeFormat("en-AU", { timeZone: "Australia/Melbourne", hourCycle: "h23",
+              year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" })
+              .formatToParts(d).map((x) => [x.type, x.value]));
+            const local = `${p.year}-${p.month}-${p.day}T${p.hour}:${p.minute}:${p.second}`;
+            const off = Math.round((Date.parse(local + "Z") - d.getTime()) / 6e4), a = Math.abs(off);
+            return local + (off >= 0 ? "+" : "-") + String(Math.floor(a / 60)).padStart(2, "0") + ":" + String(a % 60).padStart(2, "0");
+          }
+          const inWindow = (t) => t >= FROM && t <= TO;
+
+          // ---------- AFLW, from the AFL's match feed ----------
+          const AFLW_WATCH = ["Fox Footy", "Kayo", "7plus"];
+          function aflwName(n) {
+            if (!n) return "To be decided";
+            if (/^gws/i.test(n)) return "GWS Giants";
+            return n.replace(/\s+(suns|lions|swans|eagles|crows|cats)$/i, "");
+          }
+          async function aflw() {
+            const seasons = await getJson("https://aflapi.afl.com.au/afl/v2/competitions/3/compseasons?pageSize=50");
+            const list = seasons.compSeasons || [];
+            const year = String(new Date().getFullYear());
+            const season = list.find((s) => (s.name || "").includes(year)) || list[0];
+            if (!season) throw new Error("No AFLW season found");
+            const res = await getJson(`https://aflapi.afl.com.au/afl/v2/matches?competitionId=3&compSeasonId=${season.id}&pageSize=300`);
+            const out = [];
+            for (const x of res.matches || []) {
+              const t = Date.parse(x.utcStartTime);
+              if (!t || !inWindow(t)) continue;
+              const v = x.venue || {};
+              out.push({
+                start: melbIso(t), sport: "AFLW", comp: x.round?.name || "AFLW",
+                title: `${aflwName(x.home?.team?.name)} v ${aflwName(x.away?.team?.name)}`,
+                venue: [v.name, v.location].filter(Boolean).join(", ") || "Venue to confirm",
+                watch: AFLW_WATCH, local: v.state ? String(v.state).toUpperCase() === "VIC" : VIC_PLACES.test(`${v.name} ${v.location}`),
+                src: "aflw",
+              });
+            }
+            return out;
+          }
+
+          // ---------- ESPN (WNBA, A-League Women, Matildas) ----------
+          const ESPN = [
+            { feed: "basketball/wnba", sport: "WNBA", comp: "WNBA", watch: ["ESPN", "Kayo", "Disney+"] },
+            { feed: "soccer/aus.w.1", sport: "Football", comp: "A-League Women", watch: ["Paramount+"] },
+            { feed: "soccer/fifa.friendly.w", sport: "Football", comp: "International friendly", watch: ["Paramount+"], team: "Australia" },
+            { feed: "soccer/fifa.wwc", sport: "Football", comp: "Women's World Cup", watch: [], team: "Australia" },
+          ];
+          const ymd = (t) => new Date(t).toISOString().slice(0, 10).replace(/-/g, "");
+          const clean = (n) => {
+            const s = String(n || "To be decided").replace(/\s+(women|w)$/i, "").trim();
+            const noFc = s.replace(/\s+FC$/i, "");
+            return noFc.includes(" ") ? noFc : s; // "Melbourne Victory FC" -> "Melbourne Victory", but keep "Sydney FC"
+          };
+          async function espn(cfg) {
+            const j = await getJson(`https://site.api.espn.com/apis/site/v2/sports/${cfg.feed}/scoreboard?dates=${ymd(FROM)}-${ymd(TO)}&limit=500`);
+            const out = [];
+            for (const ev of j.events || []) {
+              const t = Date.parse(ev.date), c = ev.competitions?.[0] || {}, teams = c.competitors || [];
+              if (!t || !inWindow(t)) continue;
+              const st = ev.status?.type || {};
+              if (/CANCEL/i.test(st.name || "")) continue;
+              const nameOf = (x) => clean(x?.team?.displayName || x?.team?.name);
+              if (cfg.team && !teams.some((x) => [x.team?.displayName, x.team?.location, x.team?.name].some((n) => clean(n) === cfg.team))) continue;
+              const home = teams.find((x) => x.homeAway === "home") || teams[0], away = teams.find((x) => x.homeAway === "away") || teams[1];
+              const h = nameOf(home), a = nameOf(away);
+              const show = (n) => (cfg.team === "Australia" && n === "Australia" ? "Matildas" : n);
+              const addr = c.venue?.address || {};
+              const venue = [c.venue?.fullName, addr.city, addr.country && addr.country !== "Australia" && addr.country !== "USA" ? addr.country : ""].filter(Boolean).join(", ");
+              const headline = c.notes?.[0]?.headline;
+              out.push({
+                start: melbIso(t), sport: cfg.sport, comp: headline ? `${cfg.comp}, ${headline}` : cfg.comp,
+                title: `${show(h)} v ${show(a)}`, venue: venue || "Venue to confirm", watch: cfg.watch,
+                local: (!addr.country || addr.country === "Australia") && VIC_PLACES.test(`${addr.city || ""} ${addr.state || ""} ${c.venue?.fullName || ""}`),
+                note: /POSTPONED/i.test(st.name || "") ? "Postponed." : undefined,
+                feed: cfg.feed, feedTeams: [h, a], src: cfg.feed,
+              });
+            }
+            return out;
+          }
+
+          const jobs = [["aflw", aflw], ...ESPN.map((cfg) => [cfg.feed, () => espn(cfg)])];
+          let fixtures = [];
+          for (const [name, fn] of jobs) {
+            try { const got = await fn(); fixtures.push(...got); console.log(`${name}: ${got.length} games`); }
+            catch (e) { // keep what we had for this feed so one bad run never empties the page
+              console.error(`${name} failed: ${e.message}`);
+              fixtures.push(...prevFixtures.filter((f) => f.src === name && inWindow(Date.parse(f.start))));
+            }
+          }
+          fixtures = JSON.parse(JSON.stringify(fixtures)).sort((a, b) => Date.parse(a.start) - Date.parse(b.start) || a.title.localeCompare(b.title));
+
+          if (JSON.stringify(fixtures) !== JSON.stringify(prevFixtures)) {
+            writeFileSync("fixtures.json", JSON.stringify({ updated: new Date().toISOString(), fixtures }, null, 2) + "\n");
+            console.log(`fixtures.json updated: ${fixtures.length} games`);
+          } else console.log("No fixture changes");
+          FIXTURES_SCRIPT
+      - name: Commit if fixtures changed
+        run: |
+          git add fixtures.json 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git config user.name "fixtures-bot"
+            git config user.email "fixtures-bot@users.noreply.github.com"
+            git commit -m "Update fixtures"
+            git pull --rebase
+            git push
+          fi
