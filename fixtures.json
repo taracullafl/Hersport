@@ -1,48 +1,6 @@
 {
-  "updated": "2026-10-24T04:34:39.352Z",
+  "updated": "2026-10-24T10:57:08.230Z",
   "fixtures": [
-    {
-      "start": "2026-10-10T17:05:00+11:00",
-      "sport": "AFLW",
-      "comp": "Round 9",
-      "title": "Geelong v GWS Giants",
-      "venue": "GMHBA Stadium, Geelong",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": true,
-      "src": "aflw"
-    },
-    {
-      "start": "2026-10-10T19:15:00+11:00",
-      "sport": "AFLW",
-      "comp": "Round 9",
-      "title": "Richmond v Adelaide",
-      "venue": "IKON Park, Melbourne",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": true,
-      "src": "aflw"
-    },
-    {
-      "start": "2026-10-10T20:15:00+11:00",
-      "sport": "AFLW",
-      "comp": "Round 9",
-      "title": "Gold Coast v Melbourne",
-      "venue": "Great Barrier Reef Arena, Mackay",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": false,
-      "src": "aflw"
-    },
     {
       "start": "2026-10-11T12:35:00+11:00",
       "sport": "AFLW",
