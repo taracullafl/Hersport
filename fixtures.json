@@ -1,34 +1,6 @@
 {
-  "updated": "2026-10-23T11:36:43.768Z",
+  "updated": "2026-10-24T04:34:39.352Z",
   "fixtures": [
-    {
-      "start": "2026-10-10T13:05:00+11:00",
-      "sport": "AFLW",
-      "comp": "Round 9",
-      "title": "St Kilda v Collingwood",
-      "venue": "RSEA Park, Melbourne",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": true,
-      "src": "aflw"
-    },
-    {
-      "start": "2026-10-10T15:05:00+11:00",
-      "sport": "AFLW",
-      "comp": "Round 9",
-      "title": "Port Adelaide v West Coast",
-      "venue": "Alberton Oval, Adelaide",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": false,
-      "src": "aflw"
-    },
     {
       "start": "2026-10-10T17:05:00+11:00",
       "sport": "AFLW",
