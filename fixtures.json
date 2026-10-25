@@ -1,48 +1,6 @@
 {
-  "updated": "2026-10-24T10:57:08.230Z",
+  "updated": "2026-10-25T04:39:02.626Z",
   "fixtures": [
-    {
-      "start": "2026-10-11T12:35:00+11:00",
-      "sport": "AFLW",
-      "comp": "Round 9",
-      "title": "North Melbourne v Fremantle",
-      "venue": "Arden Street Oval, Melbourne",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": true,
-      "src": "aflw"
-    },
-    {
-      "start": "2026-10-11T13:05:00+11:00",
-      "sport": "AFLW",
-      "comp": "Round 9",
-      "title": "Hawthorn v Brisbane",
-      "venue": "Kennedy Community Centre, Dingley Village",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": true,
-      "src": "aflw"
-    },
-    {
-      "start": "2026-10-11T15:05:00+11:00",
-      "sport": "AFLW",
-      "comp": "Round 9",
-      "title": "Sydney v Carlton",
-      "venue": "Henson Park, Sydney",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": false,
-      "src": "aflw"
-    },
     {
       "start": "2026-10-16T19:15:00+11:00",
       "sport": "AFLW",
