@@ -1,34 +1,6 @@
 {
-  "updated": "2026-10-31T05:38:21.954Z",
+  "updated": "2026-10-31T12:26:02.246Z",
   "fixtures": [
-    {
-      "start": "2026-10-17T17:05:00+11:00",
-      "sport": "AFLW",
-      "comp": "Round 10",
-      "title": "Brisbane v Port Adelaide",
-      "venue": "Brighton Homes Arena, Ipswich",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": false,
-      "src": "aflw"
-    },
-    {
-      "start": "2026-10-17T19:15:00+11:00",
-      "sport": "AFLW",
-      "comp": "Round 10",
-      "title": "West Coast v Geelong",
-      "venue": "Sullivan Logistics Stadium, Perth",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": false,
-      "src": "aflw"
-    },
     {
       "start": "2026-10-18T12:30:00+11:00",
       "sport": "AFLW",
