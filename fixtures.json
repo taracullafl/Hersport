@@ -1,48 +1,6 @@
 {
-  "updated": "2026-11-01T00:06:52.469Z",
+  "updated": "2026-11-01T06:00:15.688Z",
   "fixtures": [
-    {
-      "start": "2026-10-18T12:30:00+11:00",
-      "sport": "AFLW",
-      "comp": "Round 10",
-      "title": "Collingwood v Sydney",
-      "venue": "Windy Hill, Melbourne",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": true,
-      "src": "aflw"
-    },
-    {
-      "start": "2026-10-18T14:35:00+11:00",
-      "sport": "AFLW",
-      "comp": "Round 10",
-      "title": "GWS Giants v Hawthorn",
-      "venue": "Henson Park, Sydney",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": false,
-      "src": "aflw"
-    },
-    {
-      "start": "2026-10-18T15:05:00+11:00",
-      "sport": "AFLW",
-      "comp": "Round 10",
-      "title": "Essendon v North Melbourne",
-      "venue": "Windy Hill, Melbourne",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": true,
-      "src": "aflw"
-    },
     {
       "start": "2026-10-18T17:05:00+11:00",
       "sport": "AFLW",
