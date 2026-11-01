@@ -1,20 +1,6 @@
 {
-  "updated": "2026-11-01T06:00:15.688Z",
+  "updated": "2026-11-01T13:20:53.754Z",
   "fixtures": [
-    {
-      "start": "2026-10-18T17:05:00+11:00",
-      "sport": "AFLW",
-      "comp": "Round 10",
-      "title": "Fremantle v St Kilda",
-      "venue": "Cockburn ARC Oval, Perth",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": false,
-      "src": "aflw"
-    },
     {
       "start": "2026-10-23T19:15:00+11:00",
       "sport": "AFLW",
@@ -268,11 +254,11 @@
       "src": "aflw"
     },
     {
-      "start": "2026-11-02T12:00:00+11:00",
+      "start": "2026-11-07T13:05:00+11:00",
       "sport": "AFLW",
       "comp": "Qualifying & Elimination Finals",
-      "title": "5th v 8th",
-      "venue": "To Be Confirmed, Victoria",
+      "title": "Geelong v Melbourne",
+      "venue": "IKON Park, Melbourne",
       "watch": [
         "Fox Footy",
         "Kayo",
@@ -282,11 +268,11 @@
       "src": "aflw"
     },
     {
-      "start": "2026-11-02T12:00:00+11:00",
+      "start": "2026-11-07T16:05:00+11:00",
       "sport": "AFLW",
       "comp": "Qualifying & Elimination Finals",
-      "title": "6th v 7th",
-      "venue": "To Be Confirmed, Victoria",
+      "title": "North Melbourne v Carlton",
+      "venue": "IKON Park, Melbourne",
       "watch": [
         "Fox Footy",
         "Kayo",
@@ -296,31 +282,31 @@
       "src": "aflw"
     },
     {
-      "start": "2026-11-02T12:00:00+11:00",
+      "start": "2026-11-08T13:05:00+11:00",
       "sport": "AFLW",
       "comp": "Qualifying & Elimination Finals",
-      "title": "Geelong v 3rd",
-      "venue": "To Be Confirmed, Victoria",
+      "title": "Sydney v Western Bulldogs",
+      "venue": "Henson Park, Sydney",
       "watch": [
         "Fox Footy",
         "Kayo",
         "7plus"
       ],
-      "local": true,
+      "local": false,
       "src": "aflw"
     },
     {
-      "start": "2026-11-02T12:00:00+11:00",
+      "start": "2026-11-08T15:05:00+11:00",
       "sport": "AFLW",
       "comp": "Qualifying & Elimination Finals",
-      "title": "North Melbourne v 4th",
-      "venue": "To Be Confirmed, Victoria",
+      "title": "Gold Coast v Hawthorn",
+      "venue": "People First Stadium, Gold Coast",
       "watch": [
         "Fox Footy",
         "Kayo",
         "7plus"
       ],
-      "local": true,
+      "local": false,
       "src": "aflw"
     },
     {
