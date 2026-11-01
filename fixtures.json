@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-31T12:26:02.246Z",
+  "updated": "2026-11-01T00:06:52.469Z",
   "fixtures": [
     {
       "start": "2026-10-18T12:30:00+11:00",
@@ -313,34 +313,6 @@
       "start": "2026-11-02T12:00:00+11:00",
       "sport": "AFLW",
       "comp": "Qualifying & Elimination Finals",
-      "title": "1st v 4th",
-      "venue": "To Be Confirmed, Victoria",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": true,
-      "src": "aflw"
-    },
-    {
-      "start": "2026-11-02T12:00:00+11:00",
-      "sport": "AFLW",
-      "comp": "Qualifying & Elimination Finals",
-      "title": "2nd v 3rd",
-      "venue": "To Be Confirmed, Victoria",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": true,
-      "src": "aflw"
-    },
-    {
-      "start": "2026-11-02T12:00:00+11:00",
-      "sport": "AFLW",
-      "comp": "Qualifying & Elimination Finals",
       "title": "5th v 8th",
       "venue": "To Be Confirmed, Victoria",
       "watch": [
@@ -356,6 +328,34 @@
       "sport": "AFLW",
       "comp": "Qualifying & Elimination Finals",
       "title": "6th v 7th",
+      "venue": "To Be Confirmed, Victoria",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-11-02T12:00:00+11:00",
+      "sport": "AFLW",
+      "comp": "Qualifying & Elimination Finals",
+      "title": "Geelong v 3rd",
+      "venue": "To Be Confirmed, Victoria",
+      "watch": [
+        "Fox Footy",
+        "Kayo",
+        "7plus"
+      ],
+      "local": true,
+      "src": "aflw"
+    },
+    {
+      "start": "2026-11-02T12:00:00+11:00",
+      "sport": "AFLW",
+      "comp": "Qualifying & Elimination Finals",
+      "title": "North Melbourne v 4th",
       "venue": "To Be Confirmed, Victoria",
       "watch": [
         "Fox Footy",
