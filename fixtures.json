@@ -1,20 +1,6 @@
 {
-  "updated": "2026-11-01T13:20:53.754Z",
+  "updated": "2026-11-06T16:45:52.663Z",
   "fixtures": [
-    {
-      "start": "2026-10-23T19:15:00+11:00",
-      "sport": "AFLW",
-      "comp": "Round 11",
-      "title": "Port Adelaide v Collingwood",
-      "venue": "Alberton Oval, Adelaide",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": false,
-      "src": "aflw"
-    },
     {
       "start": "2026-10-24T13:05:00+11:00",
       "sport": "AFLW",
