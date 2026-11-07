@@ -1,34 +1,6 @@
 {
-  "updated": "2026-11-07T05:56:23.378Z",
+  "updated": "2026-11-07T12:58:00.006Z",
   "fixtures": [
-    {
-      "start": "2026-10-24T17:05:00+11:00",
-      "sport": "AFLW",
-      "comp": "Round 11",
-      "title": "Gold Coast v Richmond",
-      "venue": "People First Stadium, Gold Coast",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": false,
-      "src": "aflw"
-    },
-    {
-      "start": "2026-10-24T19:15:00+11:00",
-      "sport": "AFLW",
-      "comp": "Round 11",
-      "title": "Western Bulldogs v Melbourne",
-      "venue": "Mission Whitten Oval, Melbourne",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": true,
-      "src": "aflw"
-    },
     {
       "start": "2026-10-25T12:35:00+11:00",
       "sport": "AFLW",
@@ -271,7 +243,7 @@
       "start": "2026-11-09T12:00:00+11:00",
       "sport": "AFLW",
       "comp": "Semi Finals",
-      "title": "Geelong v Winner of EF2",
+      "title": "Carlton v Winner of EF1",
       "venue": "To Be Confirmed, Victoria",
       "watch": [
         "Fox Footy",
@@ -285,7 +257,7 @@
       "start": "2026-11-09T12:00:00+11:00",
       "sport": "AFLW",
       "comp": "Semi Finals",
-      "title": "Loser of QF1 v Winner of EF1",
+      "title": "Geelong v Winner of EF2",
       "venue": "To Be Confirmed, Victoria",
       "watch": [
         "Fox Footy",
@@ -313,7 +285,7 @@
       "start": "2026-11-16T12:00:00+11:00",
       "sport": "AFLW",
       "comp": "Preliminary Finals",
-      "title": "Winner of QF1 v Winner of SF2",
+      "title": "North Melbourne v Winner of SF2",
       "venue": "To Be Confirmed, Victoria",
       "watch": [
         "Fox Footy",
