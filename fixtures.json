@@ -1,62 +1,6 @@
 {
-  "updated": "2026-11-07T12:58:00.006Z",
+  "updated": "2026-11-08T10:19:10.863Z",
   "fixtures": [
-    {
-      "start": "2026-10-25T12:35:00+11:00",
-      "sport": "AFLW",
-      "comp": "Round 11",
-      "title": "Sydney v West Coast",
-      "venue": "Henson Park, Sydney",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": false,
-      "src": "aflw"
-    },
-    {
-      "start": "2026-10-25T13:05:00+11:00",
-      "sport": "AFLW",
-      "comp": "Round 11",
-      "title": "North Melbourne v Adelaide",
-      "venue": "North Hobart Oval, Hobart",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": false,
-      "src": "aflw"
-    },
-    {
-      "start": "2026-10-25T15:05:00+11:00",
-      "sport": "AFLW",
-      "comp": "Round 11",
-      "title": "Hawthorn v Essendon",
-      "venue": "Kennedy Community Centre, Dingley Village",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": true,
-      "src": "aflw"
-    },
-    {
-      "start": "2026-10-25T17:05:00+11:00",
-      "sport": "AFLW",
-      "comp": "Round 11",
-      "title": "Carlton v GWS Giants",
-      "venue": "IKON Park, Melbourne",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": true,
-      "src": "aflw"
-    },
     {
       "start": "2026-10-30T19:15:00+11:00",
       "sport": "AFLW",
@@ -257,7 +201,7 @@
       "start": "2026-11-09T12:00:00+11:00",
       "sport": "AFLW",
       "comp": "Semi Finals",
-      "title": "Geelong v Winner of EF2",
+      "title": "Geelong v Sydney",
       "venue": "To Be Confirmed, Victoria",
       "watch": [
         "Fox Footy",
