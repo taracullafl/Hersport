@@ -1,20 +1,6 @@
 {
-  "updated": "2026-11-14T06:19:55.682Z",
+  "updated": "2026-11-14T15:48:23.980Z",
   "fixtures": [
-    {
-      "start": "2026-10-31T19:15:00+11:00",
-      "sport": "AFLW",
-      "comp": "Round 12",
-      "title": "West Coast v Hawthorn",
-      "venue": "Sullivan Logistics Stadium, Perth",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": false,
-      "src": "aflw"
-    },
     {
       "start": "2026-11-01T12:35:00+11:00",
       "sport": "AFLW",
@@ -156,11 +142,11 @@
       "src": "aflw"
     },
     {
-      "start": "2026-11-16T12:00:00+11:00",
+      "start": "2026-11-21T13:05:00+11:00",
       "sport": "AFLW",
       "comp": "Preliminary Finals",
-      "title": "Melbourne v Winner of SF1",
-      "venue": "To Be Confirmed, Victoria",
+      "title": "North Melbourne v Sydney",
+      "venue": "IKON Park, Melbourne",
       "watch": [
         "Fox Footy",
         "Kayo",
@@ -170,11 +156,11 @@
       "src": "aflw"
     },
     {
-      "start": "2026-11-16T12:00:00+11:00",
+      "start": "2026-11-21T16:05:00+11:00",
       "sport": "AFLW",
       "comp": "Preliminary Finals",
-      "title": "North Melbourne v Winner of SF2",
-      "venue": "To Be Confirmed, Victoria",
+      "title": "Melbourne v Carlton",
+      "venue": "IKON Park, Melbourne",
       "watch": [
         "Fox Footy",
         "Kayo",
