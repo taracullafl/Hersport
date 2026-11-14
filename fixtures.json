@@ -1,48 +1,6 @@
 {
-  "updated": "2026-11-13T17:11:55.065Z",
+  "updated": "2026-11-14T06:19:55.682Z",
   "fixtures": [
-    {
-      "start": "2026-10-31T13:05:00+11:00",
-      "sport": "AFLW",
-      "comp": "Round 12",
-      "title": "St Kilda v Port Adelaide",
-      "venue": "RSEA Park, Melbourne",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": true,
-      "src": "aflw"
-    },
-    {
-      "start": "2026-10-31T15:05:00+11:00",
-      "sport": "AFLW",
-      "comp": "Round 12",
-      "title": "Richmond v North Melbourne",
-      "venue": "Windy Hill, Melbourne",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": true,
-      "src": "aflw"
-    },
-    {
-      "start": "2026-10-31T17:05:00+11:00",
-      "sport": "AFLW",
-      "comp": "Round 12",
-      "title": "Brisbane v Carlton",
-      "venue": "Brighton Homes Arena, Ipswich",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": false,
-      "src": "aflw"
-    },
     {
       "start": "2026-10-31T19:15:00+11:00",
       "sport": "AFLW",
