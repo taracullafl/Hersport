@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-18T00:56:42.558Z",
+  "updated": "2026-11-18T11:38:57.451Z",
   "fixtures": [
     {
       "start": "2026-11-07T13:05:00+11:00",
@@ -114,7 +114,7 @@
       "src": "aflw"
     },
     {
-      "start": "2026-11-27T12:00:00+11:00",
+      "start": "2026-11-23T12:00:00+11:00",
       "sport": "AFLW",
       "comp": "Grand Final",
       "title": "Winner of PF1 v Winner of PF2",
