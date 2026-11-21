@@ -1,20 +1,6 @@
 {
-  "updated": "2026-11-21T02:12:05.455Z",
+  "updated": "2026-11-21T10:58:35.797Z",
   "fixtures": [
-    {
-      "start": "2026-11-07T16:05:00+11:00",
-      "sport": "AFLW",
-      "comp": "Qualifying & Elimination Finals",
-      "title": "North Melbourne v Carlton",
-      "venue": "IKON Park, Melbourne",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": true,
-      "src": "aflw"
-    },
     {
       "start": "2026-11-08T13:05:00+11:00",
       "sport": "AFLW",
@@ -100,10 +86,10 @@
       "src": "aflw"
     },
     {
-      "start": "2026-11-23T12:00:00+11:00",
+      "start": "2026-11-27T19:45:00+11:00",
       "sport": "AFLW",
       "comp": "Grand Final",
-      "title": "Winner of PF1 v Winner of PF2",
+      "title": "North Melbourne v Melbourne",
       "venue": "IKON Park, Melbourne",
       "watch": [
         "Fox Footy",
