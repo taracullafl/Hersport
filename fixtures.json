@@ -1,20 +1,6 @@
 {
-  "updated": "2026-11-18T11:38:57.451Z",
+  "updated": "2026-11-21T02:12:05.455Z",
   "fixtures": [
-    {
-      "start": "2026-11-07T13:05:00+11:00",
-      "sport": "AFLW",
-      "comp": "Qualifying & Elimination Finals",
-      "title": "Geelong v Melbourne",
-      "venue": "IKON Park, Melbourne",
-      "watch": [
-        "Fox Footy",
-        "Kayo",
-        "7plus"
-      ],
-      "local": true,
-      "src": "aflw"
-    },
     {
       "start": "2026-11-07T16:05:00+11:00",
       "sport": "AFLW",
